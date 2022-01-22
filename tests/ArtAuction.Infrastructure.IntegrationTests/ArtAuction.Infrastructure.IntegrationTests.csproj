@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ArtAuction.Data\ArtAuction.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\src\ArtAuction.Infrastructure\ArtAuction.Infrastructure.Services.csproj" />
+  </ItemGroup>
+
+</Project>
