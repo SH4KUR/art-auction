@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Core.Base", "ArtAuction.Core\ArtAuction.Core.Base.csproj", "{9DBFFABC-DC8D-4D64-9E43-F4FCB3720BB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Core.Base", "ArtAuction.Core.Base\ArtAuction.Core.Base.csproj", "{9DBFFABC-DC8D-4D64-9E43-F4FCB3720BB3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Infrastructure.Data", "ArtAuction.Data\ArtAuction.Infrastructure.Data.csproj", "{D3187A39-E7CE-4788-87D4-5A8C4A0A7067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Infrastructure.Data", "ArtAuction.Infrastructure.Data\ArtAuction.Infrastructure.Data.csproj", "{D3187A39-E7CE-4788-87D4-5A8C4A0A7067}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Infrastructure.Services", "ArtAuction.Infrastructure\ArtAuction.Infrastructure.Services.csproj", "{E892215E-86BB-486E-9B68-5DB488257F9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Infrastructure.Services", "ArtAuction.Infrastructure.Services\ArtAuction.Infrastructure.Services.csproj", "{E892215E-86BB-486E-9B68-5DB488257F9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Core.Domain", "ArtAuction.Domain\ArtAuction.Core.Domain.csproj", "{0B39D370-8218-4906-947C-75E425BF6820}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Core.Domain", "ArtAuction.Core.Domain\ArtAuction.Core.Domain.csproj", "{0B39D370-8218-4906-947C-75E425BF6820}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.WebUI", "ArtAuction.WebUI\ArtAuction.WebUI.csproj", "{C7ABB631-2FB3-4327-B462-5F5BE45C6E9A}"
 EndProject
