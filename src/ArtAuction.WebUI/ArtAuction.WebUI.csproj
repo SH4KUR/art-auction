@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.13" />
@@ -14,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ArtAuction.Infrastructure.Data\ArtAuction.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\ArtAuction.Infrastructure.Data\ArtAuction.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\ArtAuction.Infrastructure.Services\ArtAuction.Infrastructure.Services.csproj" />
   </ItemGroup>
 
