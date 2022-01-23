@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ArtAuction.Core\ArtAuction.Core.Base.csproj" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\ArtAuction.Core.Base\ArtAuction.Core.Base.csproj" />
   </ItemGroup>
 
 </Project>

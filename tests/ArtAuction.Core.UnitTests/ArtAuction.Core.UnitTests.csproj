@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ArtAuction.Core\ArtAuction.Core.Base.csproj" />
-    <ProjectReference Include="..\..\src\ArtAuction.Domain\ArtAuction.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\src\ArtAuction.Core.Base\ArtAuction.Core.Base.csproj" />
+    <ProjectReference Include="..\..\src\ArtAuction.Core.Domain\ArtAuction.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>

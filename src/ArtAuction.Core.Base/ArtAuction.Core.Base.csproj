@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ArtAuction.Domain\ArtAuction.Core.Domain.csproj" />
+    <ProjectReference Include="..\ArtAuction.Core.Domain\ArtAuction.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>
