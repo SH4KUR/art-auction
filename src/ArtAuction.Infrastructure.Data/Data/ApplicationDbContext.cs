@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ArtAuction.WebUI.Data
+namespace ArtAuction.Infrastructure.Persistence.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
