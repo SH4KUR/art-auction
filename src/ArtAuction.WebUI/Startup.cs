@@ -22,14 +22,13 @@ namespace ArtAuction.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddPersistenceDependencies()
+                .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"))
                 .AddServiceDependencies();
             
             services
                 .AddAutoMapper(typeof(Startup))
                 .AddMediatR(typeof(Startup));
             
-            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
         }
 
@@ -39,7 +38,6 @@ namespace ArtAuction.WebUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -51,8 +49,7 @@ namespace ArtAuction.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -60,8 +57,11 @@ namespace ArtAuction.WebUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
+            
+            // uncomment it with first run for db create
+            DatabaseEnsure.Run(Configuration.GetConnectionString("ArtAuctionDbConnection"));
+            app.Migrate();
         }
     }
 }
