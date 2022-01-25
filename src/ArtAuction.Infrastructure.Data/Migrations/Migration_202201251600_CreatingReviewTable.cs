@@ -2,31 +2,31 @@
 
 namespace ArtAuction.Infrastructure.Persistence.Migrations
 {
-    [Migration(202201251400)]
-    public class Migration_202201251400_CreatingComplaintTable : Migration
+    [Migration(202201251600)]
+    public class Migration_202201251600_CreatingReviewTable : Migration
     {
         public override void Up()
         {
-            Create.Table("complaint")
-                .WithColumn("complaint_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
+            Create.Table("review")
+                .WithColumn("review_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
                 .WithColumn("user_id_from").AsGuid().NotNullable()
                 .WithColumn("user_id_on").AsGuid().NotNullable()
                 .WithColumn("date_time").AsDateTime().NotNullable().WithDefaultValue(SystemMethods.CurrentDateTime)
-                .WithColumn("description").AsString(1000).NotNullable()
-                .WithColumn("is_processed").AsBoolean().NotNullable().WithDefaultValue(false);
+                .WithColumn("rate").AsByte().NotNullable()
+                .WithColumn("description").AsString(1000).NotNullable();
 
             Create.ForeignKey()
-                .FromTable("complaint").ForeignColumn("user_id_from")
+                .FromTable("review").ForeignColumn("user_id_from")
                 .ToTable("user").PrimaryColumn("user_id");
 
             Create.ForeignKey()
-                .FromTable("complaint").ForeignColumn("user_id_on")
+                .FromTable("review").ForeignColumn("user_id_on")
                 .ToTable("user").PrimaryColumn("user_id");
         }
 
         public override void Down()
         {
-            Delete.Table("complaint");
+            Delete.Table("review");
         }
     }
 }
