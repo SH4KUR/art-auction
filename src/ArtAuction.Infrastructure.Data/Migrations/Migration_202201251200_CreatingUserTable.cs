@@ -18,8 +18,8 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("patronymic").AsString(100).NotNullable()
                 .WithColumn("birth_date").AsDate().NotNullable()
                 .WithColumn("address").AsString(150).NotNullable()
-                .WithColumn("is_vip").AsBoolean().NotNullable()
-                .WithColumn("is_blocked").AsBoolean().NotNullable();
+                .WithColumn("is_vip").AsBoolean().NotNullable().WithDefaultValue(false)
+                .WithColumn("is_blocked").AsBoolean().NotNullable().WithDefaultValue(false);
         }
 
         public override void Down()
