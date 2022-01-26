@@ -11,7 +11,7 @@ namespace ArtAuction.WebUI
             using var scope = builder.ApplicationServices.CreateScope();
             
             var runner = scope.ServiceProvider.GetService<IMigrationRunner>();
-            runner?.MigrateUp();
+            runner?.MigrateDown(202201251800); runner?.MigrateUp();
 
             // uncomment it for migration revert
             // runner?.MigrateDown(202201251200);
