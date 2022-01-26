@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ArtAuction.Core.UnitTests
+﻿namespace ArtAuction.Core.UnitTests
 {
     public class Class1
     {
