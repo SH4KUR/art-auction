@@ -15,10 +15,10 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("end_billing_date").AsDateTime().NotNullable()
                 .WithColumn("start_price").AsDecimal().NotNullable()
                 .WithColumn("current_price").AsDecimal().NotNullable()
-                .WithColumn("full_price").AsDecimal().WithDefaultValue(null)
+                .WithColumn("full_price").AsDecimal().Nullable().WithDefaultValue(null)
                 .WithColumn("bid_step").AsDecimal().NotNullable()
                 .WithColumn("is_closed").AsBoolean().NotNullable().WithDefaultValue(false)
-                .WithColumn("customer_id").AsGuid().WithDefaultValue(null);
+                .WithColumn("customer_id").AsGuid().Nullable().WithDefaultValue(null);
 
             Create.ForeignKey()
                 .FromTable("auction").ForeignColumn("lot_id")
