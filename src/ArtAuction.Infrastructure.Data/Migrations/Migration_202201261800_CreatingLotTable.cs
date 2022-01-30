@@ -12,7 +12,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("category_id").AsGuid().NotNullable()
                 .WithColumn("name").AsString(200).NotNullable()
                 .WithColumn("painting_date").AsString(50).NotNullable()
-                .WithColumn("photo").AsFixedLengthString(64).NotNullable()
+                .WithColumn("photo").AsFixedLengthString(64).Nullable()
                 .WithColumn("description").AsString(1000).NotNullable();
 
             Create.ForeignKey()
