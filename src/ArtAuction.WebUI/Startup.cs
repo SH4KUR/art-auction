@@ -1,5 +1,5 @@
+using ArtAuction.Core.Application;
 using ArtAuction.Infrastructure.Persistence;
-using ArtAuction.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,8 +22,8 @@ namespace ArtAuction.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"))
-                .AddServiceDependencies();
+                .AddApplicationDependencies()
+                .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"));
             
             services
                 .AddAutoMapper(typeof(Startup))

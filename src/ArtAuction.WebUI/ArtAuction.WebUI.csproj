@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ArtAuction.Infrastructure.Data\ArtAuction.Infrastructure.Persistence.csproj" />
-    <ProjectReference Include="..\ArtAuction.Infrastructure.Services\ArtAuction.Infrastructure.Services.csproj" />
+    <ProjectReference Include="..\ArtAuction.Infrastructure.Persistence\ArtAuction.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
