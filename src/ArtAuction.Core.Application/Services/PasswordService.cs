@@ -1,9 +1,9 @@
 ﻿using System;
-using ArtAuction.Core.Base.Interfaces;
+using ArtAuction.Core.Application.Interfaces;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
 
-namespace ArtAuction.Infrastructure.Services.Services
+namespace ArtAuction.Core.Application.Services
 {
     public class PasswordService : IPasswordService
     {

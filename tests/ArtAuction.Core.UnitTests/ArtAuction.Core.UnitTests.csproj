@@ -13,8 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ArtAuction.Core.Base\ArtAuction.Core.Base.csproj" />
-    <ProjectReference Include="..\..\src\ArtAuction.Core.Domain\ArtAuction.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\src\ArtAuction.Core.Application\ArtAuction.Core.Application.csproj" />
   </ItemGroup>
 
 </Project>
