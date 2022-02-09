@@ -15,6 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Core.UnitTests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtAuction.Infrastructure.IntegrationTests", "tests\ArtAuction.Infrastructure.IntegrationTests\ArtAuction.Infrastructure.IntegrationTests.csproj", "{4A947154-A2BB-4872-83A0-7757B9FA83E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.Core", "ArtAuction.Core", "{DAC70464-D48A-4366-9703-1B3E2D689C4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.Infrastructure", "ArtAuction.Infrastructure", "{07D7C6D7-4C3E-4166-AC68-2FAA721FDB67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.UI", "ArtAuction.UI", "{88AD1B3D-EF66-4CB0-B2D6-7240EE6CAC5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.Tests", "ArtAuction.Tests", "{D81CE3A7-A555-4A27-9E46-180767DB959B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +56,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9DBFFABC-DC8D-4D64-9E43-F4FCB3720BB3} = {DAC70464-D48A-4366-9703-1B3E2D689C4D}
+		{D3187A39-E7CE-4788-87D4-5A8C4A0A7067} = {07D7C6D7-4C3E-4166-AC68-2FAA721FDB67}
+		{0B39D370-8218-4906-947C-75E425BF6820} = {DAC70464-D48A-4366-9703-1B3E2D689C4D}
+		{C7ABB631-2FB3-4327-B462-5F5BE45C6E9A} = {88AD1B3D-EF66-4CB0-B2D6-7240EE6CAC5B}
+		{A160F596-9328-48B9-AECE-11FC0DB4ED27} = {D81CE3A7-A555-4A27-9E46-180767DB959B}
+		{4A947154-A2BB-4872-83A0-7757B9FA83E8} = {D81CE3A7-A555-4A27-9E46-180767DB959B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FB8FA604-55A5-4A8A-86E7-819910DE11D7}
