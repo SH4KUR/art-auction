@@ -11,7 +11,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("user_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
                 .WithColumn("login").AsString(70).NotNullable()
                 .WithColumn("email").AsString(70).NotNullable()
-                .WithColumn("password").AsFixedLengthString(64).NotNullable()
+                .WithColumn("password").AsString(100).NotNullable()
                 .WithColumn("role").AsByte().NotNullable()
                 .WithColumn("first_name").AsString(100).NotNullable()
                 .WithColumn("last_name").AsString(100).NotNullable()

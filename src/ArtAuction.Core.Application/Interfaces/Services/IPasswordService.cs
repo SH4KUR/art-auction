@@ -1,4 +1,4 @@
-﻿namespace ArtAuction.Core.Application.Interfaces
+﻿namespace ArtAuction.Core.Application.Interfaces.Services
 {
     public interface IPasswordService
     {

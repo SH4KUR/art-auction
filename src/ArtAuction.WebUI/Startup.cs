@@ -25,10 +25,6 @@ namespace ArtAuction.WebUI
                 .AddApplicationDependencies()
                 .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"));
             
-            services
-                .AddAutoMapper(typeof(Startup))
-                .AddMediatR(typeof(Startup));
-            
             services.AddControllersWithViews();
         }
 
