@@ -1,5 +1,5 @@
 ﻿using System;
-using ArtAuction.Core.Application.Interfaces;
+using ArtAuction.Core.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
 

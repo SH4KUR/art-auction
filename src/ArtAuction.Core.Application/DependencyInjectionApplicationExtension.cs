@@ -1,4 +1,4 @@
-﻿using ArtAuction.Core.Application.Interfaces;
+﻿using ArtAuction.Core.Application.Interfaces.Services;
 using ArtAuction.Core.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
