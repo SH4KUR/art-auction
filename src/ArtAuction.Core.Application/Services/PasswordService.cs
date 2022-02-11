@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ArtAuction.Core.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +17,9 @@ namespace ArtAuction.Core.Application.Services
 
         public string GetHash(string inputPassword)
         {
-            var salt = Convert.FromBase64String(_configuration["Cryptography:PasswordSalt"]);
+            var salt = Encoding.UTF8.GetBytes(_configuration["Cryptography:PasswordSalt"]);
             
-            var hashedPass = Convert.ToBase64String(
+            var hashedPass = Convert.ToHexString(
                 KeyDerivation.Pbkdf2(
                     password: inputPassword, 
                     salt: salt, 
