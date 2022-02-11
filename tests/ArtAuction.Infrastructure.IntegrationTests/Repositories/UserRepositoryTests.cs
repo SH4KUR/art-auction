@@ -61,7 +61,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         }
 
         [Theory, AutoData]
-        [UseRemoveUserAfter(Login)]
+        [RemoveUserAfter(Login)]
         public void repository_adds_user_correctly(
             User user
         )

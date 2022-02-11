@@ -7,11 +7,11 @@ using Xunit.Sdk;
 
 namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
-    public class UseRemoveUserAfterAttribute : BeforeAfterTestAttribute
+    public class RemoveUserAfterAttribute : BeforeAfterTestAttribute
     {
         private readonly string _login;
         
-        public UseRemoveUserAfterAttribute(string login)
+        public RemoveUserAfterAttribute(string login)
         {
             _login = login;
         }
