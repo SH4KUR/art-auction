@@ -61,43 +61,35 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         }
 
         [Theory, AutoData]
+        [RemoveUserAfter(Login)]
         public void repository_adds_user_correctly(
             User user
         )
         {
-            try
-            {
-                // Arrange
-                var sut = new UserRepository(FakeConfig.Get());
+            // Arrange
+            var sut = new UserRepository(FakeConfig.Get());
 
-                user.Password = Password;
-                
-                // Act
-                sut.AddUser(user);
+            user.Login = Login;
+            user.Password = Password;
 
-                // Assert
-                var result = GetUser(user.Login);
+            // Act
+            sut.AddUser(user);
 
-                result.Should().NotBeNull();
-                result.Login.Should().Be(user.Login);
-                result.Email.Should().Be(user.Email);
-                result.Password.Should().Be(user.Password);
-                result.Role.Should().Be(user.Role);
-                result.FirstName.Should().Be(user.FirstName);
-                result.LastName.Should().Be(user.LastName);
-                result.Patronymic.Should().Be(user.Patronymic);
-                result.BirthDate.Should().Be(user.BirthDate.Date);
-                result.Address.Should().Be(user.Address);
-                result.IsVip.Should().Be(user.IsVip);
-                result.IsBlocked.Should().Be(user.IsBlocked);
-            }
-            catch
-            {
-                using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
-                connection.Execute("DELETE FROM [dbo].[user] WHERE [login] = @Login", new { user.Login });
-                
-                throw;
-            }
+            // Assert
+            var result = GetUser(user.Login);
+
+            result.Should().NotBeNull();
+            result.Login.Should().Be(Login);
+            result.Email.Should().Be(user.Email);
+            result.Password.Should().Be(user.Password);
+            result.Role.Should().Be(user.Role);
+            result.FirstName.Should().Be(user.FirstName);
+            result.LastName.Should().Be(user.LastName);
+            result.Patronymic.Should().Be(user.Patronymic);
+            result.BirthDate.Should().Be(user.BirthDate.Date);
+            result.Address.Should().Be(user.Address);
+            result.IsVip.Should().Be(user.IsVip);
+            result.IsBlocked.Should().Be(user.IsBlocked);
         }
 
         private User GetUser(string login)
