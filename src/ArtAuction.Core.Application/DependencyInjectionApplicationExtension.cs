@@ -1,5 +1,7 @@
-﻿using ArtAuction.Core.Application.Interfaces;
+﻿using System.Reflection;
+using ArtAuction.Core.Application.Interfaces.Services;
 using ArtAuction.Core.Application.Services;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArtAuction.Core.Application
@@ -9,7 +11,10 @@ namespace ArtAuction.Core.Application
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
         {
             // add dependencies
-            
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddScoped<IPasswordService, PasswordService>();
 
             return services;

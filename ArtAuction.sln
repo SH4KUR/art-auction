@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.UI", "ArtAuction
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArtAuction.Tests", "ArtAuction.Tests", "{D81CE3A7-A555-4A27-9E46-180767DB959B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtAuction.Tests.Base", "tests\ArtAuction.Tests.Base\ArtAuction.Tests.Base.csproj", "{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{4A947154-A2BB-4872-83A0-7757B9FA83E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A947154-A2BB-4872-83A0-7757B9FA83E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A947154-A2BB-4872-83A0-7757B9FA83E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{C7ABB631-2FB3-4327-B462-5F5BE45C6E9A} = {88AD1B3D-EF66-4CB0-B2D6-7240EE6CAC5B}
 		{A160F596-9328-48B9-AECE-11FC0DB4ED27} = {D81CE3A7-A555-4A27-9E46-180767DB959B}
 		{4A947154-A2BB-4872-83A0-7757B9FA83E8} = {D81CE3A7-A555-4A27-9E46-180767DB959B}
+		{E73EBAB4-A1ED-4CBB-8FED-5EF25DE0097D} = {D81CE3A7-A555-4A27-9E46-180767DB959B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FB8FA604-55A5-4A8A-86E7-819910DE11D7}

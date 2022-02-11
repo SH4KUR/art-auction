@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using ArtAuction.Core.Application.Interfaces.Repositories;
+using ArtAuction.Infrastructure.Persistence.Repositories;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +19,8 @@ namespace ArtAuction.Infrastructure.Persistence
                     .AddSqlServer()
                     .WithGlobalConnectionString(dbConnectionString)
                     .ScanIn(Assembly.GetExecutingAssembly()).For.All());
+
+            services.AddScoped<IUserRepository, UserRepository>();
             
             return services;
         }
