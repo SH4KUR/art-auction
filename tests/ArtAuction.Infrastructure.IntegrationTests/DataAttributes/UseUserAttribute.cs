@@ -47,7 +47,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 	                0
                 )";
 
-            using var connection = new SqlConnection(IntegrationTestsConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
             connection.Execute(query, new { UserId, Login, BirthDate });
         }
 
@@ -58,7 +58,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 WHERE 
                     [user_id] = @UserId";
             
-            using var connection = new SqlConnection(IntegrationTestsConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
             connection.Execute(query, new { UserId });
         }
     }

@@ -24,7 +24,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         public void repository_gets_user_correctly()
         {
             // Arrange
-            var sut = new UserRepository(IntegrationTestsConfig.Get());
+            var sut = new UserRepository(FakeConfig.Get());
             
             // Act
             var result = sut.GetUser(Login);
@@ -43,7 +43,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         )
         {
             // Arrange
-            var sut = new UserRepository(IntegrationTestsConfig.Get());
+            var sut = new UserRepository(FakeConfig.Get());
             
             user.UserId = new Guid(UserId);
             user.Login = expectedLogin;
@@ -68,7 +68,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             try
             {
                 // Arrange
-                var sut = new UserRepository(IntegrationTestsConfig.Get());
+                var sut = new UserRepository(FakeConfig.Get());
 
                 user.Password = Password;
                 
@@ -93,7 +93,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             }
             catch
             {
-                using var connection = new SqlConnection(IntegrationTestsConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+                using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
                 connection.Execute("DELETE FROM [dbo].[user] WHERE [login] = @Login", new { user.Login });
                 
                 throw;
@@ -120,7 +120,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
                 WHERE 
                     [login] = @login";
 
-            using var connection = new SqlConnection(IntegrationTestsConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
             return connection.QueryFirstOrDefault<User>(query, new { login });
         }
     }
