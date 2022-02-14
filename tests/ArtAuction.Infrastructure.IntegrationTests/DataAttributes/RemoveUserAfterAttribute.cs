@@ -25,7 +25,10 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     [login] = @Login";
             
             using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            connection.Execute(query, new { Login = _login });
+            connection.Execute(query, new
+            {
+                Login = _login
+            });
         }
     }
 }
