@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
-using ArtAuction.Core.Application.DTO;
 using ArtAuction.Core.Application.Exceptions;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Application.Interfaces.Services;
@@ -11,7 +10,7 @@ using MediatR;
 
 namespace ArtAuction.Core.Application.Handlers
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, UserDto>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordService _passwordService;
@@ -24,21 +23,32 @@ namespace ArtAuction.Core.Application.Handlers
             _mapper = mapper;
         }
 
-        public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var isUserExist = await _userRepository.IsUserAlreadyRegisteredAsync(request.Login, request.Email);
             if (isUserExist)
             {
                 throw new UserAlreadyRegisteredException("User with such Login or Email is already registered!");
             }
+
+            var addedUser = new User
+            {
+                Login = request.Login,
+                Email = request.Email,
+                Password = _passwordService.GetHash(request.Password),
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Patronymic = request.Patronymic,
+                Address = request.Address,
+                BirthDate = request.BirthDate,
+                Role = request.Role,
+                IsBlocked = false,
+                IsVip = false
+            };
             
-            var addedUser = _mapper.Map<User>(request);
-            addedUser.Password = _passwordService.GetHash(request.Password);
-
             await _userRepository.AddUserAsync(addedUser);
-
-            var registeredUser = await _userRepository.GetUserAsync(addedUser.Login);
-            return _mapper.Map<UserDto>(registeredUser);
+            
+            return Unit.Value;
         }
     }
 }

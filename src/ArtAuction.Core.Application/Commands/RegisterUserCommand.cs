@@ -1,11 +1,10 @@
 ﻿using System;
-using ArtAuction.Core.Application.DTO;
 using ArtAuction.Core.Domain.Enums;
 using MediatR;
 
 namespace ArtAuction.Core.Application.Commands
 {
-    public class RegisterUserCommand : IRequest<UserDto>
+    public class RegisterUserCommand : IRequest
     {
         public RegisterUserCommand(string firstName, string lastName, string patronymic, DateTime birthDate, string address, string login, string email, string password, UserRole role)
         {
