@@ -19,35 +19,35 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 
             var query = @"
                 INSERT INTO [dbo].[user] (
-	                [user_id],
-	                [login],
-	                [email],
-	                [password],
-	                [role],
-	                [first_name],
-	                [last_name],
-	                [patronymic],
-	                [birth_date],
-	                [address],
-	                [is_vip],
-	                [is_blocked]
+                     [user_id]
+	                ,[login]
+	                ,[email]
+	                ,[password]
+	                ,[role]
+	                ,[first_name]
+	                ,[last_name]
+	                ,[patronymic]
+	                ,[birth_date]
+	                ,[address]
+	                ,[is_vip]
+	                ,[is_blocked]
                 )
                 VALUES (
-	                @UserId,
-	                @Login,
-	                'user-repository.test@email.com',
-	                'B97BDCB0B4D1802A2E727FBE143CC631935BCA83C60019E1733620C08916095B', -- Password1
-	                1,
-	                'First Name',
-	                'Second Name',
-	                'Patronymic',
-	                @BirthDate,
-	                'Some test address',
-	                0,
-	                0
+	                 @UserId
+	                ,@Login
+	                ,'user-repository.test@email.com'
+	                ,'B97BDCB0B4D1802A2E727FBE143CC631935BCA83C60019E1733620C08916095B'     -- Password1
+	                ,1
+	                ,'First Name'
+	                ,'Second Name'
+	                ,'Patronymic'
+	                ,@BirthDate
+	                ,'Some test address'
+	                ,0
+	                ,0
                 )";
 
-            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString("ArtAuctionDbConnection"));
             connection.Execute(query, new { UserId, Login, BirthDate });
         }
 
@@ -58,7 +58,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 WHERE 
                     [user_id] = @UserId";
             
-            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString("ArtAuctionDbConnection"));
             connection.Execute(query, new { UserId });
         }
     }

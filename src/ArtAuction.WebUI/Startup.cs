@@ -1,6 +1,5 @@
 using ArtAuction.Core.Application;
 using ArtAuction.Infrastructure.Persistence;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +22,7 @@ namespace ArtAuction.WebUI
         {
             services
                 .AddApplicationDependencies()
-                .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"));
+                .AddPersistenceDependencies(Configuration);
             
             services.AddControllersWithViews();
         }
@@ -45,7 +44,8 @@ namespace ArtAuction.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
-            
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -56,7 +56,7 @@ namespace ArtAuction.WebUI
             });
             
             // uncomment it with first run for db create
-            DatabaseEnsure.Run(Configuration.GetConnectionString("ArtAuctionDbConnection"));
+            DatabaseEnsure.Run(Configuration);
             app.Migrate();
         }
     }
