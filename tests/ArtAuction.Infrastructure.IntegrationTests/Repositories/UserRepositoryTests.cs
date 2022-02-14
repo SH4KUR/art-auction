@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ArtAuction.Core.Domain.Entities;
 using ArtAuction.Infrastructure.IntegrationTests.DataAttributes;
 using ArtAuction.Infrastructure.Persistence;
@@ -17,18 +18,19 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
     {
         private const string UserId = "{5C6EEC32-4ED7-4209-A765-03E50E440FC7}";
         private const string Login = "user_test_login";
+        private const string Email = "user-repository.test@email.com";
         private const string BirthDate = "1999-01-01";
         private const string Password = "B97BDCB0B4D1802A2E727FBE143CC631935BCA83C60019E1733620C08916095B";
 
         [Fact]
         [UseUser(Login = Login)]
-        public void repository_gets_user_correctly()
+        public async Task repository_gets_user_correctly()
         {
             // Arrange
             var sut = new UserRepository(TestConfiguration.Get());
             
             // Act
-            var result = sut.GetUser(Login);
+            var result = await sut.GetUserAsync(Login);
 
             // Assert
             result.Should().NotBeNull();
@@ -37,7 +39,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 
         [Theory, AutoData]
         [UseUser(UserId = UserId, Login = Login, BirthDate = BirthDate)]
-        public void repository_updates_user_correctly(
+        public async Task repository_updates_user_correctly(
             string expectedLogin,
             DateTime expectedBirthDate,
             User user
@@ -54,7 +56,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             sut.UpdateUser(user);
 
             // Assert
-            var result = GetUser(expectedLogin);
+            var result = await GetUser(expectedLogin);
             
             result.Should().NotBeNull();
             result.Login.Should().Be(expectedLogin);
@@ -63,7 +65,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 
         [Theory, AutoData]
         [RemoveUserAfter(Login)]
-        public void repository_adds_user_correctly(
+        public async Task repository_adds_user_correctly(
             User user
         )
         {
@@ -74,10 +76,10 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             user.Password = Password;
 
             // Act
-            sut.AddUser(user);
+            await sut.AddUserAsync(user);
 
             // Assert
-            var result = GetUser(user.Login);
+            var result = await GetUser(user.Login);
 
             result.Should().NotBeNull();
             result.Login.Should().Be(Login);
@@ -93,7 +95,39 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             result.IsBlocked.Should().Be(user.IsBlocked);
         }
 
-        private User GetUser(string login)
+        [Theory, AutoData]
+        [UseUser(Login = Login)]
+        public async Task repository_returns_true_if_user_with_the_same_login_exists(
+            string email
+        )
+        {
+            // Arrange
+            var sut = new UserRepository(TestConfiguration.Get());
+
+            // Act
+            var result = await sut.IsUserAlreadyRegisteredAsync(Login, email);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Theory, AutoData]
+        [UseUser(Email = Email)]
+        public async Task repository_returns_true_if_user_with_the_same_email_exists(
+            string login
+        )
+        {
+            // Arrange
+            var sut = new UserRepository(TestConfiguration.Get());
+
+            // Act
+            var result = await sut.IsUserAlreadyRegisteredAsync(login, Email);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        private async Task<User> GetUser(string login)
         {
             var query = @"
                 SELECT 
@@ -113,8 +147,11 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
                 WHERE 
                     [login] = @login";
 
-            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            return connection.QueryFirstOrDefault<User>(query, new { login });
+            await using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryFirstOrDefaultAsync<User>(query, new
+            {
+                login
+            });
         }
     }
 }

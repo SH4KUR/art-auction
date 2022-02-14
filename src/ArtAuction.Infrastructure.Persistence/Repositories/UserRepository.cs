@@ -1,4 +1,5 @@
-﻿using ArtAuction.Core.Application.Interfaces.Repositories;
+﻿using System.Threading.Tasks;
+using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Domain.Entities;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -15,7 +16,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             _configuration = configuration;
         }
 
-        public User GetUser(string login)
+        public async Task<User> GetUserAsync(string login)
         {
             var query = @"
                 SELECT 
@@ -35,11 +36,14 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 WHERE 
                     [login] = @UserLogin";
 
-            using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            return connection.QueryFirstOrDefault<User>(query, new { UserLogin = login });
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryFirstOrDefaultAsync<User>(query, new
+            {
+                UserLogin = login
+            });
         }
 
-        public void AddUser(User user)
+        public async Task AddUserAsync(User user)
         {
             var query = @"
                 INSERT INTO [dbo].[user] (
@@ -69,8 +73,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,@IsBlocked
                 )";
 
-            using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            connection.Execute(query, new
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
             {
                 user.Login,
                 user.Email,
@@ -121,6 +125,23 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 user.Address,
                 user.IsVip,
                 user.IsBlocked
+            });
+        }
+
+        public async Task<bool> IsUserAlreadyRegisteredAsync(string login, string email)
+        {
+            var query = @"
+                SELECT 1 
+                FROM [dbo].[user]
+                WHERE 
+                        [login] = @login
+                     OR [email] = @email";
+            
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.ExecuteScalarAsync<bool>(query, new
+            {
+                login, 
+                email
             });
         }
     }
