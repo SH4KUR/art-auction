@@ -1,6 +1,5 @@
 using ArtAuction.Core.Application;
 using ArtAuction.Infrastructure.Persistence;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +44,8 @@ namespace ArtAuction.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
-            
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
