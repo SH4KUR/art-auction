@@ -2,13 +2,14 @@
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Infrastructure.Persistence.Repositories;
 using FluentMigrator.Runner;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArtAuction.Infrastructure.Persistence
 {
     public static class DependencyInjectionPersistenceExtension
     {
-        public static IServiceCollection AddPersistenceDependencies(this IServiceCollection services, string dbConnectionString)
+        public static IServiceCollection AddPersistenceDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             // add dependencies
 
@@ -17,7 +18,7 @@ namespace ArtAuction.Infrastructure.Persistence
                 .AddLogging(l => l.AddFluentMigratorConsole())
                 .ConfigureRunner(r => r
                     .AddSqlServer()
-                    .WithGlobalConnectionString(dbConnectionString)
+                    .WithGlobalConnectionString(configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection))
                     .ScanIn(Assembly.GetExecutingAssembly()).For.All());
 
             services.AddScoped<IUserRepository, UserRepository>();

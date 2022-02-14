@@ -22,7 +22,7 @@ namespace ArtAuction.WebUI
         {
             services
                 .AddApplicationDependencies()
-                .AddPersistenceDependencies(Configuration.GetConnectionString("ArtAuctionDbConnection"));
+                .AddPersistenceDependencies(Configuration);
             
             services.AddControllersWithViews();
         }
@@ -56,7 +56,7 @@ namespace ArtAuction.WebUI
             });
             
             // uncomment it with first run for db create
-            DatabaseEnsure.Run(Configuration.GetConnectionString("ArtAuctionDbConnection"));
+            DatabaseEnsure.Run(Configuration);
             app.Migrate();
         }
     }
