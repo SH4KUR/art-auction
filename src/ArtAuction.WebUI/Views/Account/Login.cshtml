@@ -1,0 +1,29 @@
+﻿@model ArtAuction.WebUI.Models.Account.AccountLoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center align-items-center">    
+    <div class="col-md-6">   
+        <form asp-action="Login">
+            @Html.HiddenFor(x => x.ReturnUrl)
+            
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Login" class="control-label" autofocus>Login</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Password</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-lg btn-primary btn-block" />
+            </div>
+        </form>
+    </div>
+</div>

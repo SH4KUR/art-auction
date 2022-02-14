@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace ArtAuction.Infrastructure.Persistence
 {
@@ -7,9 +8,9 @@ namespace ArtAuction.Infrastructure.Persistence
     {
         private const string DbName = "ArtAuction";
         
-        public static void Run(string dbConnectionString)
+        public static void Run(IConfiguration configuration)
         {
-            using var connection = new SqlConnection(dbConnectionString);
+            using var connection = new SqlConnection(configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             
             var exist = connection.ExecuteScalar<bool>("SELECT 1 FROM sys.databases WHERE name = @DbName", new { DbName });
             if (!exist)
