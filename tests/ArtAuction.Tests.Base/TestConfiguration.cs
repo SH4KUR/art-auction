@@ -2,7 +2,7 @@
 
 namespace ArtAuction.Tests.Base
 {
-    public static class FakeConfig
+    public static class TestConfiguration
     {
         public static IConfiguration Get()
         {

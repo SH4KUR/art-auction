@@ -1,6 +1,7 @@
 ﻿using System;
 using ArtAuction.Core.Domain.Entities;
 using ArtAuction.Infrastructure.IntegrationTests.DataAttributes;
+using ArtAuction.Infrastructure.Persistence;
 using ArtAuction.Infrastructure.Persistence.Repositories;
 using ArtAuction.Tests.Base;
 using AutoFixture.Xunit2;
@@ -24,7 +25,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         public void repository_gets_user_correctly()
         {
             // Arrange
-            var sut = new UserRepository(FakeConfig.Get());
+            var sut = new UserRepository(TestConfiguration.Get());
             
             // Act
             var result = sut.GetUser(Login);
@@ -43,7 +44,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         )
         {
             // Arrange
-            var sut = new UserRepository(FakeConfig.Get());
+            var sut = new UserRepository(TestConfiguration.Get());
             
             user.UserId = new Guid(UserId);
             user.Login = expectedLogin;
@@ -67,7 +68,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         )
         {
             // Arrange
-            var sut = new UserRepository(FakeConfig.Get());
+            var sut = new UserRepository(TestConfiguration.Get());
 
             user.Login = Login;
             user.Password = Password;
@@ -96,23 +97,23 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         {
             var query = @"
                 SELECT 
-                    [user_id] AS UserId,
-                    [login],
-                    [email],
-                    [password],
-                    [role],
-                    [first_name] AS FirstName,
-                    [last_name] AS LastName,
-                    [patronymic],
-                    [birth_date] AS BirthDate,
-                    [address],
-                    [is_vip] AS IsVip,
-                    [is_blocked] AS IsBlocked
+                     [user_id] AS UserId
+                    ,[login]
+                    ,[email]
+                    ,[password]
+                    ,[role]
+                    ,[first_name] AS FirstName
+                    ,[last_name] AS LastName
+                    ,[patronymic]
+                    ,[birth_date] AS BirthDate
+                    ,[address]
+                    ,[is_vip] AS IsVip
+                    ,[is_blocked] AS IsBlocked
                 FROM [dbo].[user]
                 WHERE 
                     [login] = @login";
 
-            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return connection.QueryFirstOrDefault<User>(query, new { login });
         }
     }

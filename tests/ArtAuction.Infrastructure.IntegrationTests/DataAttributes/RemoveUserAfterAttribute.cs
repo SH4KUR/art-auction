@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ArtAuction.Infrastructure.Persistence;
 using ArtAuction.Tests.Base;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -23,7 +24,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 WHERE 
                     [login] = @Login";
             
-            using var connection = new SqlConnection(FakeConfig.Get().GetConnectionString("ArtAuctionDbConnection"));
+            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             connection.Execute(query, new { Login = _login });
         }
     }
