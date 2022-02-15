@@ -1,11 +1,14 @@
-﻿using ArtAuction.Core.Domain.Entities;
+﻿using System.Threading.Tasks;
+using ArtAuction.Core.Domain.Entities;
 
 namespace ArtAuction.Core.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        User GetUser(string login);
-        void AddUser(User user);
+        Task<User> GetUserAsync(string login);
+        Task AddUserAsync(User user);
         void UpdateUser(User user);
+
+        Task<bool> IsUserAlreadyRegisteredAsync(string login, string email);
     }
 }

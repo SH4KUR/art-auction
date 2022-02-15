@@ -11,6 +11,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
     {
         public string UserId { get; set; } = "{CF8F3639-7328-429E-9791-77972854F730}";
         public string Login { get; set; } = "user_test_login";
+        public string Email { get; set; } = "user-repository.test@email.com";
         public string BirthDate { get; set; } = "1999-01-01";
 
         public override void Before(MethodInfo methodUnderTest)
@@ -35,7 +36,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 VALUES (
 	                 @UserId
 	                ,@Login
-	                ,'user-repository.test@email.com'
+	                ,@Email
 	                ,'B97BDCB0B4D1802A2E727FBE143CC631935BCA83C60019E1733620C08916095B'     -- Password1
 	                ,1
 	                ,'First Name'
@@ -48,7 +49,13 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 )";
 
             using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString("ArtAuctionDbConnection"));
-            connection.Execute(query, new { UserId, Login, BirthDate });
+            connection.Execute(query, new
+            {
+                UserId, 
+                Login, 
+                Email, 
+                BirthDate
+            });
         }
 
         public override void After(MethodInfo methodUnderTest)
@@ -59,7 +66,10 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     [user_id] = @UserId";
             
             using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString("ArtAuctionDbConnection"));
-            connection.Execute(query, new { UserId });
+            connection.Execute(query, new
+            {
+                UserId
+            });
         }
     }
 }

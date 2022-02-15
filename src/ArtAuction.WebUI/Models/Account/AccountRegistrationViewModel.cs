@@ -34,8 +34,9 @@ namespace ArtAuction.WebUI.Models.Account
         public string Password { get; set; }
         
         [Required]
+        [Compare("Password", ErrorMessage = "Password mismatch")]
         [DataType(DataType.Password)]
-        public string PasswordRepeat { get; set; }
+        public string PasswordConfirm { get; set; }
         
         [Required]
         public UserRole Role { get; set; }
