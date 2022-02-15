@@ -23,7 +23,9 @@ namespace ArtAuction.WebUI
             services
                 .AddApplicationDependencies()
                 .AddPersistenceDependencies(Configuration);
-            
+
+            services.AddAutoMapper(cfg => cfg.AddMaps(typeof(WebUiLayerMappingProfile)));
+
             services.AddControllersWithViews();
         }
 
