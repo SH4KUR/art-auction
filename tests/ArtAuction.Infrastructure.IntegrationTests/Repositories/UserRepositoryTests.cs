@@ -56,7 +56,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             sut.UpdateUser(user);
 
             // Assert
-            var result = await GetUser(expectedLogin);
+            var result = await GetUserAsync(expectedLogin);
             
             result.Should().NotBeNull();
             result.Login.Should().Be(expectedLogin);
@@ -79,7 +79,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             await sut.AddUserAsync(user);
 
             // Assert
-            var result = await GetUser(user.Login);
+            var result = await GetUserAsync(user.Login);
 
             result.Should().NotBeNull();
             result.Login.Should().Be(Login);
@@ -93,6 +93,27 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             result.Address.Should().Be(user.Address);
             result.IsVip.Should().Be(user.IsVip);
             result.IsBlocked.Should().Be(user.IsBlocked);
+        }
+
+        [Theory, AutoData]
+        [RemoveUserAfter(Login)]
+        public async Task repository_adds_user_account_correctly(
+            User user
+        )
+        {
+            // Arrange
+            var sut = new UserRepository(TestConfiguration.Get());
+
+            user.Login = Login;
+            user.Password = Password;
+
+            // Act
+            await sut.AddUserAsync(user);
+
+            // Assert
+            var result = await IsUserAccountAddedAsync(user.Login);
+
+            result.Should().BeTrue();
         }
 
         [Theory, AutoData]
@@ -127,7 +148,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             result.Should().BeTrue();
         }
 
-        private async Task<User> GetUser(string login)
+        private async Task<User> GetUserAsync(string login)
         {
             var query = @"
                 SELECT 
@@ -149,6 +170,22 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 
             await using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.QueryFirstOrDefaultAsync<User>(query, new
+            {
+                login
+            });
+        }
+
+        private async Task<bool> IsUserAccountAddedAsync(string login)
+        {
+            var query = @"
+                SELECT 1 
+                FROM [dbo].[user] AS u INNER JOIN [dbo].[account] AS a
+                    ON u.[user_id] = a.[user_id]
+                WHERE 
+                    u.[login] = @login";
+
+            await using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.ExecuteScalarAsync<bool>(query, new
             {
                 login
             });

@@ -46,6 +46,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         public async Task AddUserAsync(User user)
         {
             var query = @"
+                DECLARE @AddedUser TABLE ([user_id] UNIQUEIDENTIFIER)
+                    
                 INSERT INTO [dbo].[user] (
 	                 [login]
 	                ,[email]
@@ -59,6 +61,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,[is_vip]
 	                ,[is_blocked]
                 )
+                OUTPUT INSERTED.[user_id] INTO @AddedUser
                 VALUES (
 	                 @Login
 	                ,@Email
@@ -71,23 +74,45 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,@Address
 	                ,@IsVip
 	                ,@IsBlocked
+                )
+
+                INSERT INTO [dbo].[account] (
+	                 [account_id]
+                    ,[user_id]
+                    ,[sum]
+                    ,[last_update]
+                )
+                VALUES (
+	                 NEWID()
+	                ,(SELECT TOP 1 [user_id] FROM @AddedUser)
+	                ,0
+	                ,GETDATE()
                 )";
 
-            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            await connection.ExecuteAsync(query, new
+            await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
-                user.Login,
-                user.Email,
-                user.Password,
-                user.Role,
-                user.FirstName,
-                user.LastName,
-                user.Patronymic,
-                user.BirthDate,
-                user.Address,
-                user.IsVip,
-                user.IsBlocked
-            });
+                await connection.OpenAsync();
+                await using (var transaction = await connection.BeginTransactionAsync())
+                {
+                    var sqlParams = new
+                    {
+                        user.Login,
+                        user.Email,
+                        user.Password,
+                        user.Role,
+                        user.FirstName,
+                        user.LastName,
+                        user.Patronymic,
+                        user.BirthDate,
+                        user.Address,
+                        user.IsVip,
+                        user.IsBlocked
+                    };
+                    
+                    await connection.ExecuteAsync(query, sqlParams, transaction);
+                    await transaction.CommitAsync();
+                }
+            }
         }
 
         public void UpdateUser(User user)
@@ -134,8 +159,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 SELECT 1 
                 FROM [dbo].[user]
                 WHERE 
-                        [login] = @login
-                     OR [email] = @email";
+                      [login] = @login
+                   OR [email] = @email";
             
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.ExecuteScalarAsync<bool>(query, new
