@@ -5,7 +5,6 @@ using ArtAuction.Core.Application.Exceptions;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Application.Interfaces.Services;
 using ArtAuction.Core.Domain.Entities;
-using AutoMapper;
 using MediatR;
 
 namespace ArtAuction.Core.Application.Handlers
@@ -14,13 +13,11 @@ namespace ArtAuction.Core.Application.Handlers
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordService _passwordService;
-        private readonly IMapper _mapper;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordService passwordService, IMapper mapper)
+        public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordService passwordService)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
-            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
