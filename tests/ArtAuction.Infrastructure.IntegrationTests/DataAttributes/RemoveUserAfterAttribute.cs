@@ -20,15 +20,28 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
         public override void After(MethodInfo methodUnderTest)
         {
             var query = @"
-                DELETE FROM [dbo].[user] 
+                DECLARE @UserId UNIQUEIDENTIFIER
+
+                SELECT @UserId = [user_id] 
+                FROM [dbo].[user]
                 WHERE 
-                    [login] = @Login";
+	                [login] = @Login
+                
+                DELETE FROM [dbo].[account]
+                WHERE [user_id] = @UserId
+
+                DELETE FROM [dbo].[user] 
+                WHERE [user_id] = @UserId";
             
-            using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
-            connection.Execute(query, new
+            using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
-                Login = _login
-            });
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    connection.Execute(query, new { Login = _login }, transaction);
+                    transaction.Commit();
+                }
+            }
         }
     }
 }
