@@ -12,7 +12,7 @@ namespace ArtAuction.Core.Application
         {
             // add dependencies
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ApplicationLayerMappingProfile)));
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddScoped<IPasswordService, PasswordService>();
