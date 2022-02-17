@@ -61,7 +61,7 @@ namespace ArtAuction.WebUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout()   // TODO: Add modal dialog
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             
