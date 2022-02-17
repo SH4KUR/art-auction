@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.WebUI.Models.Account;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtAuction.WebUI.Controllers
@@ -26,16 +30,42 @@ namespace ArtAuction.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(AccountLoginViewModel model)
+        public async Task<IActionResult> Login(AccountLoginViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Login));
+                var loggedUser = await _mediator.Send(new LoginUserCommand(model.Login, model.Password));
+                if (loggedUser != null)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new(ClaimTypes.Role, loggedUser.Role.ToString()),
+                        new(ClaimTypes.Name, loggedUser.Login)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = model.IsRemember
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            catch
-            {
-                return View(model);
-            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login or password!");
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()   // TODO: Add modal dialog
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -48,13 +78,17 @@ namespace ArtAuction.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registration(AccountRegistrationViewModel model)
         {
-            // TODO: Add UserAlreadyRegisteredException handling
             if (ModelState.IsValid)
             {
-                await _mediator.Send(_mapper.Map<RegisterUserCommand>(model));
-                return RedirectToAction("Index", "Home");   // TODO: Add user notification about registration
-            }
+                var isRegistered = await _mediator.Send(_mapper.Map<RegisterUserCommand>(model));
+                if (isRegistered)
+                {
+                    return RedirectToAction("Index", "Home");   // TODO: Redirect to "successfully registered" page
+                }
 
+                ModelState.AddModelError(string.Empty, "User with such Login or Email is already registered!");
+            }
+            
             return View(model);
         }
     }

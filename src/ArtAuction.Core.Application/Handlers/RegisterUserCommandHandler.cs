@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
-using ArtAuction.Core.Application.Exceptions;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Application.Interfaces.Services;
 using ArtAuction.Core.Domain.Entities;
@@ -9,7 +8,7 @@ using MediatR;
 
 namespace ArtAuction.Core.Application.Handlers
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, bool>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordService _passwordService;
@@ -20,12 +19,12 @@ namespace ArtAuction.Core.Application.Handlers
             _passwordService = passwordService;
         }
 
-        public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var isUserExist = await _userRepository.IsUserAlreadyRegisteredAsync(request.Login, request.Email);
             if (isUserExist)
             {
-                throw new UserAlreadyRegisteredException("User with such Login or Email is already registered!");
+                return false;
             }
 
             var addedUser = new User
@@ -45,7 +44,7 @@ namespace ArtAuction.Core.Application.Handlers
             
             await _userRepository.AddUserAsync(addedUser);
             
-            return Unit.Value;
+            return true;
         }
     }
 }

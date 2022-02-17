@@ -11,6 +11,6 @@ namespace ArtAuction.WebUI.Models.Account
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public bool IsRemember { get; set; }
     }
 }
