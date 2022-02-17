@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using ArtAuction.Core.Application.DTO;
+using ArtAuction.Core.Domain.Entities;
+using AutoMapper;
 
 namespace ArtAuction.Core.Application
 {
@@ -6,6 +8,7 @@ namespace ArtAuction.Core.Application
     {
         public ApplicationLayerMappingProfile()
         {
+            CreateMap<User, UserDto>();
         }
     }
 }

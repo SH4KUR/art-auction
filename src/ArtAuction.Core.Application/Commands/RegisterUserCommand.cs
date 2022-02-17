@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ArtAuction.Core.Application.Commands
 {
-    public class RegisterUserCommand : IRequest
+    public class RegisterUserCommand : IRequest<bool>
     {
         public RegisterUserCommand(string firstName, string lastName, string patronymic, DateTime birthDate, string address, string login, string email, string password, UserRole role)
         {
