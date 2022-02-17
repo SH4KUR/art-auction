@@ -16,6 +16,54 @@ namespace ArtAuction.Core.UnitTests.Handlers
 {
     public class RegisterUserCommandHandlerTests
     {
+        [Theory, MockAutoData]
+        public async Task handler_returns_false_if_user_with_same_login_or_email_already_registered(
+            RegisterUserCommand request,
+            [Frozen] IUserRepository userRepository,
+            RegisterUserCommandHandler sut
+        )
+        {
+            // Arrange
+            userRepository.AsMock()
+                .Setup(r => r.IsUserAlreadyRegisteredAsync(request.Login, request.Email))
+                .ReturnsAsync(true);
+
+            // Act
+           var result = await sut.Handle(request, CancellationToken.None);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Theory, MockAutoData]
+        public async Task handler_returns_true_if_user_was_registered(
+            string passwordHash,
+            RegisterUserCommand request,
+            [Frozen] IUserRepository userRepository,
+            [Frozen] IPasswordService passwordService,
+            RegisterUserCommandHandler sut
+        )
+        {
+            // Arrange
+            userRepository.AsMock()
+                .Setup(r => r.IsUserAlreadyRegisteredAsync(request.Login, request.Email))
+                .ReturnsAsync(false);
+
+            userRepository.AsMock()
+                .Setup(r => r.AddUserAsync(It.IsAny<User>()))
+                .Callback((User _) => { });
+
+            passwordService.AsMock()
+                .Setup(s => s.GetHash(request.Password))
+                .Returns(passwordHash);
+
+            // Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
         [Theory, InlineMockAutoData]
         public async Task handler_adds_new_user_correctly(
             string passwordHash,
