@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
-using ArtAuction.Core.Application.Exceptions;
 using ArtAuction.Core.Application.Handlers;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Application.Interfaces.Services;
@@ -11,7 +9,6 @@ using ArtAuction.Tests.Base.Attributes;
 using ArtAuction.Tests.Base.Extensions;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using Xunit;
 
@@ -20,7 +17,7 @@ namespace ArtAuction.Core.UnitTests.Handlers
     public class RegisterUserCommandHandlerTests
     {
         [Theory, MockAutoData]
-        public void handler_should_throw_exception_if_user_with_same_login_or_email_already_registered(
+        public async Task handler_returns_false_if_user_with_same_login_or_email_already_registered(
             RegisterUserCommand request,
             [Frozen] IUserRepository userRepository,
             RegisterUserCommandHandler sut
@@ -32,10 +29,39 @@ namespace ArtAuction.Core.UnitTests.Handlers
                 .ReturnsAsync(true);
 
             // Act
-            Func<Task<Unit>> action = () => sut.Handle(request, CancellationToken.None);
+           var result = await sut.Handle(request, CancellationToken.None);
 
             // Assert
-            action.Should().ThrowAsync<UserAlreadyRegisteredException>();
+            result.Should().BeFalse();
+        }
+
+        [Theory, MockAutoData]
+        public async Task handler_returns_true_if_user_was_registered(
+            string passwordHash,
+            RegisterUserCommand request,
+            [Frozen] IUserRepository userRepository,
+            [Frozen] IPasswordService passwordService,
+            RegisterUserCommandHandler sut
+        )
+        {
+            // Arrange
+            userRepository.AsMock()
+                .Setup(r => r.IsUserAlreadyRegisteredAsync(request.Login, request.Email))
+                .ReturnsAsync(false);
+
+            userRepository.AsMock()
+                .Setup(r => r.AddUserAsync(It.IsAny<User>()))
+                .Callback((User _) => { });
+
+            passwordService.AsMock()
+                .Setup(s => s.GetHash(request.Password))
+                .Returns(passwordHash);
+
+            // Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Theory, InlineMockAutoData]
