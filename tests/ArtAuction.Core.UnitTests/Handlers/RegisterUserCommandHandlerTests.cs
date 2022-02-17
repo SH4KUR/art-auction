@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
-using ArtAuction.Core.Application.Exceptions;
 using ArtAuction.Core.Application.Handlers;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Application.Interfaces.Services;
@@ -11,7 +9,6 @@ using ArtAuction.Tests.Base.Attributes;
 using ArtAuction.Tests.Base.Extensions;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using Xunit;
 
@@ -19,25 +16,6 @@ namespace ArtAuction.Core.UnitTests.Handlers
 {
     public class RegisterUserCommandHandlerTests
     {
-        [Theory, MockAutoData]
-        public void handler_should_throw_exception_if_user_with_same_login_or_email_already_registered(
-            RegisterUserCommand request,
-            [Frozen] IUserRepository userRepository,
-            RegisterUserCommandHandler sut
-        )
-        {
-            // Arrange
-            userRepository.AsMock()
-                .Setup(r => r.IsUserAlreadyRegisteredAsync(request.Login, request.Email))
-                .ReturnsAsync(true);
-
-            // Act
-            Func<Task<Unit>> action = () => sut.Handle(request, CancellationToken.None);
-
-            // Assert
-            action.Should().ThrowAsync<UserAlreadyRegisteredException>();
-        }
-
         [Theory, InlineMockAutoData]
         public async Task handler_adds_new_user_correctly(
             string passwordHash,
