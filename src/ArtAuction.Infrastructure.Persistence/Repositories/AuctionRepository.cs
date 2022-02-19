@@ -132,7 +132,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             var query = @"
                 SELECT
 	                 [message_id] AS MessageId
-                    ,[user_id] AS UserID
+                    ,[user_id] AS UserId
                     ,[auction_id] AS AuctionId
                     ,[date_time] AS DateTime
                     ,[message_text] AS MessageText
