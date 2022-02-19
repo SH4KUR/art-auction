@@ -15,7 +15,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("role").AsByte().NotNullable()
                 .WithColumn("first_name").AsString(100).NotNullable()
                 .WithColumn("last_name").AsString(100).NotNullable()
-                .WithColumn("patronymic").AsString(100).NotNullable()
+                .WithColumn("patronymic").AsString(100).Nullable()
                 .WithColumn("birth_date").AsDate().NotNullable()
                 .WithColumn("address").AsString(150).NotNullable()
                 .WithColumn("is_vip").AsBoolean().NotNullable().WithDefaultValue(false)
