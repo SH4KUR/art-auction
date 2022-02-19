@@ -13,9 +13,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
         public string AuctionId { get; set; } = "{6DE7B006-CA79-4180-85D6-1171283ED4C8}";
         public int AuctionNumber { get; set; } = 14698847;
         public string LotId { get; set; } = "{5B3BC3D7-5AEC-433D-8E87-BAE7701A41AA}";
-        
-        public string CategoryId { get; set; } = "{AD87B03B-EDB8-4871-BA93-E34CB6239DDA}";
         public string SellerId { get; set; } = "{71A47031-0DB2-41DF-9FED-7A189357A260}";
+        
+        private readonly string _categoryId = "{AD87B03B-EDB8-4871-BA93-E34CB6239DDA}";
 
         public override void Before(MethodInfo methodUnderTest)
         {
@@ -24,7 +24,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
             var query = @"
                 INSERT INTO [dbo].[category] (
                      [category_id]
-                    ,[category_name]
+                    ,[name]
                 )
                 VALUES (
                      @CategoryId
@@ -87,7 +87,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 AuctionId,
                 AuctionNumber,
                 LotId,
-                CategoryId,
+                CategoryId = _categoryId,
                 SellerId
             });
         }
@@ -95,19 +95,20 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
         public override void After(MethodInfo methodUnderTest)
         {
             var query = @"
-                DELETE FROM [dbo].[category] 
-                WHERE 
-                    [category_id] = @CategoryId
-
-                DELETE FROM [dbo].[lot] 
-                WHERE 
-                    [lot_id] = @LotId
 
                 DELETE FROM [dbo].[auction]
                 WHERE 
                     [auction_id] = @AuctionId
 
-                DBCC CHECKIDENT('[dbo].[auction]', RESEED)";
+                DBCC CHECKIDENT('[dbo].[auction]', RESEED)
+
+                DELETE FROM [dbo].[lot] 
+                WHERE 
+                    [lot_id] = @LotId
+                
+                DELETE FROM [dbo].[category] 
+                WHERE 
+                    [category_id] = @CategoryId";
 
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
@@ -118,7 +119,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     {
                         AuctionId,
                         LotId,
-                        CategoryId
+                        CategoryId = _categoryId
                     }, transaction);
                     transaction.Commit();
                 }

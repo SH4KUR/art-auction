@@ -27,13 +27,13 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 WHERE 
 	                [auction_number] = @AuctionNumber
                 
-                DELETE FROM [dbo].[lot] 
-                WHERE 
-                    [lot_id] = (SELECT TOP 1 [lot_id] WHERE [auction_id] = @AuctionId)
-
                 DELETE FROM [dbo].[auction]
                 WHERE 
-                    [auction_id] = @AuctionId";
+                    [auction_id] = @AuctionId
+            
+                DELETE FROM [dbo].[lot] 
+                WHERE 
+                    [lot_id] = (SELECT TOP 1 [lot_id] WHERE [auction_id] = @AuctionId)";
             
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using ArtAuction.Tests.Base;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -11,6 +12,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
     {
         public string UserId { get; set; } = "{C33144F0-CED6-4B81-B7FF-58ADAA38D284}";
         public string AuctionId { get; set; } = "{B8315CA0-2A29-49BA-9F2F-318CED12746E}";
+        public string DateTime { get; set; } = "2022-01-01 12:30:30";
         
         public override void Before(MethodInfo methodUnderTest)
         {
@@ -26,7 +28,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 VALUES (
                      @UserId
 	                ,@AuctionId
-	                ,GETDATE()
+	                ,@DateTime
 	                ,1450
                 )";
 
@@ -34,7 +36,8 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
             connection.Execute(query, new
             {
                 UserId,
-                AuctionId
+                AuctionId,
+                DateTime
             });
         }
 
@@ -42,13 +45,15 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
         {
             var query = @"
                 DELETE FROM [dbo].[bid]
-                WHERE 
-                    [auction_id] = @AuctionId";
+                WHERE
+                      [auction_id] = @AuctionId
+                  AND [date_time] = @DateTime";
 
             using var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString("ArtAuctionDbConnection"));
             connection.Execute(query, new
             {
-                AuctionId
+                AuctionId,
+                DateTime
             });
         }
     }
