@@ -11,7 +11,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task AddAuction(Auction auction)
+        public Task AddAuctionAsync(Auction auction)
         {
             throw new System.NotImplementedException();
         }
