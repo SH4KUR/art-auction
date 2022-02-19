@@ -7,5 +7,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     {
         Task<Auction> GetAuctionAsync(int auctionNumber);
         Task AddAuctionAsync(Auction auction);
+        Task AddBidAsync(Bid bid);
+        Task AddMessageAsync(Message message);
     }
 }
