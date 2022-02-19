@@ -9,6 +9,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
         {
             Create.Table("lot")
                 .WithColumn("lot_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
+                .WithColumn("lot_number").AsInt32().NotNullable().Identity()
                 .WithColumn("category_id").AsGuid().NotNullable()
                 .WithColumn("name").AsString(200).NotNullable()
                 .WithColumn("painting_date").AsString(50).NotNullable()
@@ -18,6 +19,10 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
             Create.ForeignKey()
                 .FromTable("lot").ForeignColumn("category_id")
                 .ToTable("category").PrimaryColumn("category_id");
+
+            Create.UniqueConstraint()
+                .OnTable("lot")
+                .Column("lot_number");
         }
 
         public override void Down()
