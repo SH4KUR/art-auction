@@ -6,6 +6,6 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     public interface IAuctionRepository
     {
         Task<Auction> GetAuctionAsync(int auctionNumber);
-        Task AddAuction(Auction auction);
+        Task AddAuctionAsync(Auction auction);
     }
 }
