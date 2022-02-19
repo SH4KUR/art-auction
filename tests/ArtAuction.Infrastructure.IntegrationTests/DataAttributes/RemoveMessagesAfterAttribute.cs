@@ -11,9 +11,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
     public class RemoveMessagesAfterAttribute : BeforeAfterTestAttribute
     {
-        private readonly Guid _auctionId;
+        private readonly string _auctionId;
         
-        public RemoveMessagesAfterAttribute(Guid auctionId)
+        public RemoveMessagesAfterAttribute(string auctionId)
         {
             _auctionId = auctionId;
         }

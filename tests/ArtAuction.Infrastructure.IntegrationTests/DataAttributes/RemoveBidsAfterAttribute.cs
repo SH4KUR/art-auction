@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using ArtAuction.Infrastructure.Persistence;
 using ArtAuction.Tests.Base;
 using Dapper;
@@ -11,9 +10,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
     public class RemoveBidsAfterAttribute : BeforeAfterTestAttribute
     {
-        private readonly Guid _auctionId;
+        private readonly string _auctionId;
         
-        public RemoveBidsAfterAttribute(Guid auctionId)
+        public RemoveBidsAfterAttribute(string auctionId)
         {
             _auctionId = auctionId;
         }

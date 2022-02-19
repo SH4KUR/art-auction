@@ -10,30 +10,36 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
     public class RemoveAuctionAfterAttribute : BeforeAfterTestAttribute
     {
-        private readonly int _auctionNumber;
+        private readonly string _sellerId;
         
-        public RemoveAuctionAfterAttribute(int auctionNumber)
+        public RemoveAuctionAfterAttribute(string sellerId)
         {
-            _auctionNumber = auctionNumber;
+            _sellerId = sellerId;
         }
         
         public override void After(MethodInfo methodUnderTest)
         {
             var query = @"
-                DECLARE @AuctionId UNIQUEIDENTIFIER
+                DECLARE @AuctionInfo TABLE (
+                     [auction_id] UNIQUEIDENTIFIER 
+                    ,[lot_id] UNIQUEIDENTIFIER
+                )
 
-                SELECT @AuctionId = [auction_id] 
+                INSERT INTO @AuctionInfo
+                SELECT 
+                     [auction_id] 
+                    ,[lot_id] 
                 FROM [dbo].[auction]
                 WHERE 
-	                [auction_number] = @AuctionNumber
+	                [seller_id] = @SellerId
                 
                 DELETE FROM [dbo].[auction]
                 WHERE 
-                    [auction_id] = @AuctionId
+                    [auction_id] = (SELECT TOP 1 [auction_id] FROM @AuctionInfo)
             
                 DELETE FROM [dbo].[lot] 
                 WHERE 
-                    [lot_id] = (SELECT TOP 1 [lot_id] WHERE [auction_id] = @AuctionId)";
+                    [lot_id] = (SELECT TOP 1 [lot_id] FROM @AuctionInfo)";
             
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
@@ -42,7 +48,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 {
                     connection.Execute(query, new
                     {
-                        AuctionNumber = _auctionNumber
+                        SellerId = _sellerId
                     }, transaction);
                     transaction.Commit();
                 }
