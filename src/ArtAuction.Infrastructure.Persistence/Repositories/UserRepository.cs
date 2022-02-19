@@ -77,14 +77,12 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 )
 
                 INSERT INTO [dbo].[account] (
-	                 [account_id]
-                    ,[user_id]
+	                 [user_id]
                     ,[sum]
                     ,[last_update]
                 )
                 VALUES (
-	                 NEWID()
-	                ,(SELECT TOP 1 [user_id] FROM @InsertedUser)
+	                 (SELECT TOP 1 [user_id] FROM @InsertedUser)
 	                ,0
 	                ,GETDATE()
                 )";

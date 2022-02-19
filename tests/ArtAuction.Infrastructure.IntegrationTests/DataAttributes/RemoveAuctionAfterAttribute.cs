@@ -8,32 +8,32 @@ using Xunit.Sdk;
 
 namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
-    public class RemoveUserAfterAttribute : BeforeAfterTestAttribute
+    public class RemoveAuctionAfterAttribute : BeforeAfterTestAttribute
     {
-        private readonly string _login;
+        private readonly int _auctionNumber;
         
-        public RemoveUserAfterAttribute(string login)
+        public RemoveAuctionAfterAttribute(int auctionNumber)
         {
-            _login = login;
+            _auctionNumber = auctionNumber;
         }
         
         public override void After(MethodInfo methodUnderTest)
         {
             var query = @"
-                DECLARE @UserId UNIQUEIDENTIFIER
+                DECLARE @AuctionId UNIQUEIDENTIFIER
 
-                SELECT @UserId = [user_id] 
-                FROM [dbo].[user]
+                SELECT @AuctionId = [auction_id] 
+                FROM [dbo].[auction]
                 WHERE 
-	                [login] = @Login
+	                [auction_number] = @AuctionNumber
                 
-                DELETE FROM [dbo].[account]
+                DELETE FROM [dbo].[lot] 
                 WHERE 
-                    [user_id] = @UserId
+                    [lot_id] = (SELECT TOP 1 [lot_id] WHERE [auction_id] = @AuctionId)
 
-                DELETE FROM [dbo].[user] 
+                DELETE FROM [dbo].[auction]
                 WHERE 
-                    [user_id] = @UserId";
+                    [auction_id] = @AuctionId";
             
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
@@ -42,7 +42,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 {
                     connection.Execute(query, new
                     {
-                        Login = _login
+                        AuctionNumber = _auctionNumber
                     }, transaction);
                     transaction.Commit();
                 }

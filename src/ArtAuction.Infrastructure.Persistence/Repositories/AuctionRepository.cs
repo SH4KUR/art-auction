@@ -153,7 +153,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 DECLARE @InsertedLot TABLE ([lot_id] UNIQUEIDENTIFIER)
 
                 INSERT INTO [dbo].[lot] (
-	                 [category_id]
+                     [category_id]
                     ,[name]
                     ,[painting_date]
                     ,[photo]
@@ -161,7 +161,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 )
                 OUTPUT INSERTED.[lot_id] INTO @InsertedLot
                 VALUES (
-	                 (SELECT TOP 1 [category_id] FROM [dbo].[category] WHERE [name] = @CategoryName)
+                     (SELECT TOP 1 [category_id] FROM [dbo].[category] WHERE [name] = @CategoryName)
                     ,@LotName
                     ,@PaintingDate
                     ,@Photo
@@ -181,7 +181,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[customer_id]
                 )
                 VALUES (
-	                 (SELECT TOP 1 [lot_id] FROM @InsertedLot)
+                     (SELECT TOP 1 [lot_id] FROM @InsertedLot)
 	                ,@SellerId
                     ,@StartBillingDate
 	                ,@EndBillingDate
@@ -223,15 +223,15 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         {
             var query = @"
                 INSERT INTO [dbo].[bid] (
-	                 [user_id]
+                     [user_id]
                     ,[auction_id]
                     ,[date_time]
                     ,[sum]
                 )
                 VALUES (
-	                 @UserId
+                     @UserId
 	                ,@AuctionId
-	                ,@DateTime
+	                ,GETDATE()
 	                ,@Sum
                 )";
 
@@ -240,7 +240,6 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             {
                 bid.UserId,
                 bid.AuctionId,
-                bid.DateTime,
                 bid.Sum
             });
         }
@@ -258,7 +257,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 VALUES (
 	                 @UserId
 	                ,@AuctionId
-	                ,@DateTime
+	                ,GETDATE()
 	                ,@MessageText
 	                ,@IsAdmin
                 )";
@@ -268,7 +267,6 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             {
                 message.UserId,
                 message.AuctionId,
-                message.DateTime,
                 message.MessageText,
                 message.IsAdmin
             });
