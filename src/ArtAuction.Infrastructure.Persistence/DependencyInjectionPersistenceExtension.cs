@@ -22,6 +22,7 @@ namespace ArtAuction.Infrastructure.Persistence
                     .ScanIn(Assembly.GetExecutingAssembly()).For.All());
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuctionRepository, AuctionRepository>();
             
             return services;
         }
