@@ -9,6 +9,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
         {
             Create.Table("auction")
                 .WithColumn("auction_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
+                .WithColumn("auction_number").AsInt32().NotNullable().Identity()
                 .WithColumn("lot_id").AsGuid().NotNullable()
                 .WithColumn("seller_id").AsGuid().NotNullable()
                 .WithColumn("start_billing_date").AsDateTime().NotNullable()
@@ -23,11 +24,9 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
             Create.ForeignKey()
                 .FromTable("auction").ForeignColumn("lot_id")
                 .ToTable("lot").PrimaryColumn("lot_id");
-
             Create.ForeignKey()
                 .FromTable("auction").ForeignColumn("seller_id")
                 .ToTable("user").PrimaryColumn("user_id");
-
             Create.ForeignKey()
                 .FromTable("auction").ForeignColumn("customer_id")
                 .ToTable("user").PrimaryColumn("user_id");
@@ -35,6 +34,9 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
             Create.UniqueConstraint()
                 .OnTable("auction")
                 .Column("lot_id");
+            Create.UniqueConstraint()
+                .OnTable("auction")
+                .Column("auction_number");
         }
 
         public override void Down()

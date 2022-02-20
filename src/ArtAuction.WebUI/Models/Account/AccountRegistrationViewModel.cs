@@ -11,8 +11,7 @@ namespace ArtAuction.WebUI.Models.Account
 
         [Required]
         public string LastName { get; set; }
-
-        [Required]
+        
         public string Patronymic { get; set; }
 
         [Required]

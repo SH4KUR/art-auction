@@ -8,32 +8,38 @@ using Xunit.Sdk;
 
 namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 {
-    public class RemoveUserAfterAttribute : BeforeAfterTestAttribute
+    public class RemoveAuctionAfterAttribute : BeforeAfterTestAttribute
     {
-        private readonly string _login;
+        private readonly string _sellerId;
         
-        public RemoveUserAfterAttribute(string login)
+        public RemoveAuctionAfterAttribute(string sellerId)
         {
-            _login = login;
+            _sellerId = sellerId;
         }
         
         public override void After(MethodInfo methodUnderTest)
         {
             var query = @"
-                DECLARE @UserId UNIQUEIDENTIFIER
+                DECLARE @AuctionInfo TABLE (
+                     [auction_id] UNIQUEIDENTIFIER 
+                    ,[lot_id] UNIQUEIDENTIFIER
+                )
 
-                SELECT @UserId = [user_id] 
-                FROM [dbo].[user]
+                INSERT INTO @AuctionInfo
+                SELECT 
+                     [auction_id] 
+                    ,[lot_id] 
+                FROM [dbo].[auction]
                 WHERE 
-	                [login] = @Login
+	                [seller_id] = @SellerId
                 
-                DELETE FROM [dbo].[account]
+                DELETE FROM [dbo].[auction]
                 WHERE 
-                    [user_id] = @UserId
-
-                DELETE FROM [dbo].[user] 
+                    [auction_id] = (SELECT TOP 1 [auction_id] FROM @AuctionInfo)
+            
+                DELETE FROM [dbo].[lot] 
                 WHERE 
-                    [user_id] = @UserId";
+                    [lot_id] = (SELECT TOP 1 [lot_id] FROM @AuctionInfo)";
             
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
@@ -42,7 +48,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                 {
                     connection.Execute(query, new
                     {
-                        Login = _login
+                        SellerId = _sellerId
                     }, transaction);
                     transaction.Commit();
                 }
