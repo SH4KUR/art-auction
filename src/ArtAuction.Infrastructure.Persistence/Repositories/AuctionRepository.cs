@@ -271,5 +271,17 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 message.IsAdmin
             });
         }
+
+        public async Task<IEnumerable<Category>> GetCategories()
+        {
+            var query = @"
+                SELECT
+                     [category_id] AS CategoryId
+                    ,[name]
+                FROM [dbo].[category]";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryAsync<Category>(query);
+        }
     }
 }

@@ -146,6 +146,23 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             result.First().UserId.Should().Be(UserId);
         }
 
+        [Fact, MockAutoData]
+        [UseUser(UserId = SellerId)]
+        [UseUser(UserId = UserId)]
+        [UseCategory]
+        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId)]
+        public async Task repository_gets_categories_correctly()
+        {
+            // Arrange
+            var sut = new AuctionRepository(TestConfiguration.Get());
+            
+            // Act
+            var result = await sut.GetCategories();
+
+            // Assert
+            result.Should().NotBeNullOrEmpty();
+        }
+
         #region Private methods
 
         private async Task<Auction> GetAuctionAsync(string sellerId)
