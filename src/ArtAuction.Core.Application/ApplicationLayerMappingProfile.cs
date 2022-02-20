@@ -11,4 +11,4 @@ namespace ArtAuction.Core.Application
             CreateMap<User, UserDto>();
         }
     }
-}
+}   

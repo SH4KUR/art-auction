@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ArtAuction.Core.Domain.Enums;
 using ArtAuction.Tests.Base;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -11,6 +12,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
     {
         public string UserId { get; set; } = "{CF8F3639-7328-429E-9791-77972854F730}";
         public string Login { get; set; } = "user_test_login";
+        public UserRole Role { get; set; } = UserRole.Seller;
         public string Email { get; set; } = "user-repository.test@email.com";
         public string BirthDate { get; set; } = "1999-01-01";
 
@@ -38,7 +40,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 	                ,@Login
 	                ,@Email
 	                ,'B97BDCB0B4D1802A2E727FBE143CC631935BCA83C60019E1733620C08916095B'     -- Password1
-	                ,1
+	                ,@Role
 	                ,'First Name'
 	                ,'Second Name'
 	                ,'Patronymic'
@@ -53,6 +55,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
             {
                 UserId, 
                 Login, 
+                Role,
                 Email, 
                 BirthDate
             });

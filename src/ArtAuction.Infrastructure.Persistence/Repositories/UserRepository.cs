@@ -46,7 +46,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         public async Task AddUserAsync(User user)
         {
             var query = @"
-                DECLARE @AddedUser TABLE ([user_id] UNIQUEIDENTIFIER)
+                DECLARE @InsertedUser TABLE ([user_id] UNIQUEIDENTIFIER)
                     
                 INSERT INTO [dbo].[user] (
 	                 [login]
@@ -61,7 +61,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,[is_vip]
 	                ,[is_blocked]
                 )
-                OUTPUT INSERTED.[user_id] INTO @AddedUser
+                OUTPUT INSERTED.[user_id] INTO @InsertedUser
                 VALUES (
 	                 @Login
 	                ,@Email
@@ -77,14 +77,12 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 )
 
                 INSERT INTO [dbo].[account] (
-	                 [account_id]
-                    ,[user_id]
+	                 [user_id]
                     ,[sum]
                     ,[last_update]
                 )
                 VALUES (
-	                 NEWID()
-	                ,(SELECT TOP 1 [user_id] FROM @AddedUser)
+	                 (SELECT TOP 1 [user_id] FROM @InsertedUser)
 	                ,0
 	                ,GETDATE()
                 )";
@@ -159,8 +157,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 SELECT 1 
                 FROM [dbo].[user]
                 WHERE 
-                      [login] = @login
-                   OR [email] = @email";
+                    [login] = @login
+                 OR [email] = @email";
             
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.ExecuteScalarAsync<bool>(query, new

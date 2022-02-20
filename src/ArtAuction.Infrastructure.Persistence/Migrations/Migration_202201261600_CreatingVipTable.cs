@@ -17,7 +17,6 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
             Create.ForeignKey()
                 .FromTable("vip").ForeignColumn("user_id")
                 .ToTable("user").PrimaryColumn("user_id");
-
             Create.ForeignKey()
                 .FromTable("vip").ForeignColumn("operation_id")
                 .ToTable("operation").PrimaryColumn("operation_id");
