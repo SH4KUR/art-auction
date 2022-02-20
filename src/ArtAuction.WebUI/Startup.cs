@@ -69,10 +69,11 @@ namespace ArtAuction.WebUI
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            
-            // uncomment it with first run for db create
+
+            // uncomment this block of code with the first run to create and seed the database
             DatabaseEnsure.Run(Configuration);
             app.Migrate();
+            DatabaseSeed.Seed(Configuration);
         }
     }
 }
