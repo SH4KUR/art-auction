@@ -1,0 +1,15 @@
+﻿@using ArtAuction.Core.Domain.Enums
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Auction Catalog Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Auction Catalog</h1>
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
+    {
+        <a asp-controller="AuctionCatalog" asp-action="AddAuction" class="btn btn-lg btn-primary">Create Auction</a>
+    }
+    <p>Auction Catalog</p>
+</div>
