@@ -19,7 +19,8 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
         
         [Required]
         public string Description { get; set; }
-        
+
+        [Required]
         public string SellerLogin { get; set; }
         
         [Required]

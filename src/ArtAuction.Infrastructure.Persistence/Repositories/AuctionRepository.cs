@@ -278,7 +278,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 SELECT
                      [category_id] AS CategoryId
                     ,[name]
-                FROM [dbo].[category]";
+                FROM [dbo].[category]
+                ORDER BY [name]";
 
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.QueryAsync<Category>(query);
