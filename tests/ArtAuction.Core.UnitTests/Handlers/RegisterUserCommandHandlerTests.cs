@@ -18,8 +18,8 @@ namespace ArtAuction.Core.UnitTests.Handlers
     {
         [Theory, MockAutoData]
         public async Task handler_returns_false_if_user_with_same_login_or_email_already_registered(
-            RegisterUserCommand request,
             [Frozen] IUserRepository userRepository,
+            RegisterUserCommand request,
             RegisterUserCommandHandler sut
         )
         {
@@ -38,9 +38,9 @@ namespace ArtAuction.Core.UnitTests.Handlers
         [Theory, MockAutoData]
         public async Task handler_returns_true_if_user_was_registered(
             string passwordHash,
-            RegisterUserCommand request,
             [Frozen] IUserRepository userRepository,
             [Frozen] IPasswordService passwordService,
+            RegisterUserCommand request,
             RegisterUserCommandHandler sut
         )
         {
@@ -67,9 +67,9 @@ namespace ArtAuction.Core.UnitTests.Handlers
         [Theory, InlineMockAutoData]
         public async Task handler_adds_new_user_correctly(
             string passwordHash,
-            RegisterUserCommand request,
             [Frozen] IUserRepository userRepository,
             [Frozen] IPasswordService passwordService,
+            RegisterUserCommand request,
             RegisterUserCommandHandler sut
         )
         {
