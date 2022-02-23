@@ -1,5 +1,6 @@
 ﻿using ArtAuction.Core.Application.Commands;
 using ArtAuction.WebUI.Models.Account;
+using ArtAuction.WebUI.Models.AuctionCatalog;
 using AutoMapper;
 
 namespace ArtAuction.WebUI
@@ -9,6 +10,7 @@ namespace ArtAuction.WebUI
         public WebUiLayerMappingProfile()
         {
             CreateMap<AccountRegistrationViewModel, RegisterUserCommand>();
+            CreateMap<CreateAuctionLotViewModel, CreateAuctionCommand>();
         }
     }
 }

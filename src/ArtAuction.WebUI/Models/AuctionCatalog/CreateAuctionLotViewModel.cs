@@ -6,10 +6,10 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
     public class CreateAuctionLotViewModel
     {
         [Required]
-        public string Name { get; set; }
+        public string LotName { get; set; }
         
         [Required]
-        public string Category { get; set; }
+        public string CategoryName { get; set; }
         
         [Required]
         public string PaintingDate { get; set; }

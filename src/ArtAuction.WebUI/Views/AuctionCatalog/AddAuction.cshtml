@@ -16,14 +16,14 @@
             <input asp-for="SellerLogin" class="form-control" value="@(User.FindFirst(ClaimTypes.Name).Value)" hidden />
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label" autofocus>Lot Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="LotName" class="control-label" autofocus>Lot Name</label>
+                <input asp-for="LotName" class="form-control" />
+                <span asp-validation-for="LotName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category" class="control-label">Category</label>
-                <select asp-for="Category" class="form-control" asp-items="@ViewBag.Categories"></select>
-                <span asp-validation-for="Category" class="text-danger"></span>
+                <label asp-for="CategoryName" class="control-label">Category</label>
+                <select asp-for="CategoryName" class="form-control" asp-items="@ViewBag.Categories"></select>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PaintingDate" class="control-label">Painting Date</label>
