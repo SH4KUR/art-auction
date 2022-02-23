@@ -10,6 +10,10 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
             Create.Table("category")
                 .WithColumn("category_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
                 .WithColumn("name").AsString(100).NotNullable();
+
+            Create.UniqueConstraint()
+                .OnTable("category")
+                .Column("name");
         }
 
         public override void Down()
