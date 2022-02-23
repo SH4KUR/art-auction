@@ -1,0 +1,74 @@
+﻿@using System.Security.Claims
+@model ArtAuction.WebUI.Models.AuctionCatalog.CreateAuctionLotViewModel
+
+@{
+    ViewData["Title"] = "Add Auction Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Create Auction</h1>
+</div>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="col-md-6">
+        <form asp-action="AddAuction">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="SellerLogin" class="form-control" value="@(User.FindFirst(ClaimTypes.Name).Value)" hidden />
+
+            <div class="form-group">
+                <label asp-for="LotName" class="control-label" autofocus>Lot Name</label>
+                <input asp-for="LotName" class="form-control" />
+                <span asp-validation-for="LotName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryName" class="control-label">Category</label>
+                <select asp-for="CategoryName" class="form-control" asp-items="@ViewBag.Categories"></select>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaintingDate" class="control-label">Painting Date</label>
+                <input asp-for="PaintingDate" class="form-control" />
+                <span asp-validation-for="PaintingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label">Photo</label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description</label>
+                <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartBillingDate" class="control-label">Start Billing Date</label>
+                <input asp-for="StartBillingDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")"/>
+                <span asp-validation-for="StartBillingDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EndBillingDate" class="control-label">End Billing Date</label>
+                <input asp-for="EndBillingDate" class="form-control" value="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-ddThh:mm")" />
+                <span asp-validation-for="EndBillingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartPrice" class="control-label">Start Price</label>
+                <input asp-for="StartPrice" class="form-control" />
+                <span asp-validation-for="StartPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullPrice" class="control-label">Full Price</label>
+                <input asp-for="FullPrice" class="form-control" />
+                <span asp-validation-for="FullPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BidStep" class="control-label">Bid Step</label>
+                <input asp-for="BidStep" class="form-control" />
+                <span asp-validation-for="BidStep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-lg btn-primary btn-block" />
+            </div>
+        </form>
+    </div>
+</div>
