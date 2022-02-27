@@ -44,6 +44,60 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             });
         }
 
+        public User GetUser(Guid userId)
+        {
+            var query = @"
+                SELECT 
+                     [user_id] AS UserId
+                    ,[login]
+                    ,[email]
+                    ,[password]
+                    ,[role]
+                    ,[first_name] AS FirstName
+                    ,[last_name] AS LastName
+                    ,[patronymic]
+                    ,[birth_date] AS BirthDate
+                    ,[address]
+                    ,[is_vip] AS IsVip
+                    ,[is_blocked] AS IsBlocked
+                FROM [dbo].[user]
+                WHERE 
+                    [user_id] = @UserId";
+
+            using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return connection.QueryFirstOrDefault<User>(query, new
+            {
+                UserId = userId
+            });
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var query = @"
+                SELECT 
+                     [user_id] AS UserId
+                    ,[login]
+                    ,[email]
+                    ,[password]
+                    ,[role]
+                    ,[first_name] AS FirstName
+                    ,[last_name] AS LastName
+                    ,[patronymic]
+                    ,[birth_date] AS BirthDate
+                    ,[address]
+                    ,[is_vip] AS IsVip
+                    ,[is_blocked] AS IsBlocked
+                FROM [dbo].[user]
+                WHERE 
+                    [user_id] = @UserId";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryFirstOrDefaultAsync<User>(query, new
+            {
+                UserId = userId
+            });
+        }
+
         public async Task AddUserAsync(User user)
         {
             var query = @"
