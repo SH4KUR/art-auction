@@ -55,8 +55,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     ,[auction_number]
                     ,[lot_id]
                     ,[seller_id]
-                    ,[start_billing_date]
-                    ,[end_billing_date]
+                    ,[creation_datetime]
+                    ,[start_billing_datetime]
+                    ,[end_billing_datetime]
                     ,[start_price]
                     ,[current_price]
                     ,[full_price]
@@ -69,6 +70,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     ,@AuctionNumber
 	                ,@LotId
 	                ,@SellerId
+                    ,GETDATE()
                     ,GETDATE()
 	                ,DATEADD(MONTH, 1, GETDATE())
 	                ,1400

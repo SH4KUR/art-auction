@@ -68,8 +68,8 @@ namespace ArtAuction.Core.UnitTests.Handlers
             auction.FullPrice.Should().Be(request.FullPrice);
             auction.BidStep.Should().Be(request.BidStep);
             
-            auction.StartBillingDate.Should().Be(request.StartBillingDate);
-            auction.EndBillingDate.Should().Be(request.EndBillingDate);
+            auction.StartBillingDateTime.Should().Be(request.StartBillingDate);
+            auction.EndBillingDateTime.Should().Be(request.EndBillingDate);
         }
 
         [Theory, MockAutoData]

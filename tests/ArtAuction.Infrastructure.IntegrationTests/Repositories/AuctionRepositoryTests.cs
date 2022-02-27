@@ -87,6 +87,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             
             result.Should().NotBeNull();
             result.SellerId.Should().Be(new Guid(SellerId));
+            result.CreationDateTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
             
             result.Lot.Should().NotBeNull();
             result.Lot.Category.Name.Should().Be(CategoryName);
@@ -149,7 +150,6 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         [Fact, MockAutoData]
         [UseUser(UserId = SellerId)]
         [UseUser(UserId = UserId)]
-        [UseCategory]
         [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId)]
         public async Task repository_gets_categories_correctly()
         {
@@ -175,8 +175,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 	                ,[auction_number] AS AuctionNumber
                     ,[lot_id] AS LotId
                     ,[seller_id] AS SellerId
-                    ,[start_billing_date] AS StartBillingDate
-                    ,[end_billing_date] AS EndBillingDate
+                    ,[creation_datetime] AS CreationDatetime
+                    ,[start_billing_datetime] AS StartBillingDateTime
+                    ,[end_billing_datetime] AS EndBillingDateTime
                     ,[start_price] AS StartPrice
                     ,[current_price] AS CurrentPrice
                     ,[full_price] AS FullPrice

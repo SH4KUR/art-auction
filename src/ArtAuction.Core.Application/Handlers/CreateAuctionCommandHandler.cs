@@ -35,8 +35,8 @@ namespace ArtAuction.Core.Application.Handlers
                 FullPrice = request.FullPrice,
                 BidStep = request.BidStep,
                 
-                StartBillingDate = request.StartBillingDate,
-                EndBillingDate = request.EndBillingDate,
+                StartBillingDateTime = request.StartBillingDate,
+                EndBillingDateTime = request.EndBillingDate,
                 
                 Lot = new Lot
                 {
