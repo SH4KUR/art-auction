@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Interfaces.Repositories;
+using ArtAuction.Core.Application.Models;
 using ArtAuction.Core.Domain.Entities;
 using ArtAuction.Core.Domain.Enums;
 using Dapper;
@@ -69,7 +70,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return auction;
         }
 
-        public async Task<IEnumerable<Auction>> GetAuctionsAsync(
+        public async Task<AuctionsWithTotalCount> GetAuctionsAsync(
             SortingRule sort, 
             IEnumerable<string> filterCategories, 
             decimal? minCurrentPrice, 
@@ -83,6 +84,18 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             var auctionSortSql = GetAuctionSortSql(sort);
 
             var query = $@"
+                SELECT 
+                    COUNT (*)
+                FROM [dbo].[auction] AS a 
+	                INNER JOIN [dbo].[lot] AS l ON a.[lot_id] = l.[lot_id]
+	                INNER JOIN [dbo].[category] AS c ON l.[category_id] = c.[category_id]
+                WHERE 
+                    a.[is_closed] = {(isClosed ? "1" : "0")}
+                    {categoriesFilterSql}
+                    {currentPriceFilterSql}
+
+                -------------
+
                 SELECT 
 	                 [auction_id] AS AuctionId
 	                ,[auction_number] AS AuctionNumber
@@ -110,13 +123,18 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             ";
 
             List<Auction> auctions;
+            int totalCount;
+            
             await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
                 await connection.OpenAsync();
                 await using (var transaction = await connection.BeginTransactionAsync())
                 {
-                    auctions = (List<Auction>) await connection.QueryAsync<Auction>(query, transaction: transaction);
+                    var reader = await connection.QueryMultipleAsync(query, transaction: transaction);
 
+                    totalCount = await reader.ReadFirstAsync<int>();
+                    auctions = (List<Auction>) await reader.ReadAsync<Auction>();
+                    
                     if (auctions.Any())
                     {
                         foreach (var auction in auctions)
@@ -131,13 +149,17 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 }
             }
 
-            return auctions;
+            return new AuctionsWithTotalCount
+            {
+                Auctions = auctions,
+                TotalCount = totalCount
+            };
         }
 
         private string GetCategoriesFilterSql(string[] filterCategories)
         {
             return filterCategories.Any()
-                ? $", c.[name] IN ('{string.Join("', '", filterCategories)}')"
+                ? $"AND c.[name] IN ('{string.Join("', '", filterCategories)}')"
                 : string.Empty;
         }
 
@@ -152,11 +174,11 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 
             if (maxCurrentPrice != null)
             {
-                sqlFilter.AppendLine($", a.[current_price] <= {maxCurrentPrice}");
+                sqlFilter.AppendLine($"AND a.[current_price] <= {maxCurrentPrice}");
             }
             if (minCurrentPrice != null)
             {
-                sqlFilter.AppendLine($", a.[current_price] >= {minCurrentPrice}");
+                sqlFilter.AppendLine($"AND a.[current_price] >= {minCurrentPrice}");
             }
 
             return sqlFilter.ToString();

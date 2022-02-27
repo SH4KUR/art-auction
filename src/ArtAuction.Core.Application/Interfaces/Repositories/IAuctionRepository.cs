@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ArtAuction.Core.Application.Models;
 using ArtAuction.Core.Domain.Entities;
 using ArtAuction.Core.Domain.Enums;
 
@@ -8,7 +9,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     public interface IAuctionRepository
     {
         Task<Auction> GetAuctionAsync(int auctionNumber);
-        Task<IEnumerable<Auction>> GetAuctionsAsync(
+        Task<AuctionsWithTotalCount> GetAuctionsAsync(
             SortingRule sort, 
             IEnumerable<string> filterCategories, 
             decimal? minCurrentPrice,
