@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Domain.Entities;
 using Dapper;
@@ -92,23 +93,31 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 await connection.OpenAsync();
                 await using (var transaction = await connection.BeginTransactionAsync())
                 {
-                    var sqlParams = new
+                    try
                     {
-                        user.Login,
-                        user.Email,
-                        user.Password,
-                        user.Role,
-                        user.FirstName,
-                        user.LastName,
-                        user.Patronymic,
-                        user.BirthDate,
-                        user.Address,
-                        user.IsVip,
-                        user.IsBlocked
-                    };
-                    
-                    await connection.ExecuteAsync(query, sqlParams, transaction);
-                    await transaction.CommitAsync();
+                        var sqlParams = new
+                        {
+                            user.Login,
+                            user.Email,
+                            user.Password,
+                            user.Role,
+                            user.FirstName,
+                            user.LastName,
+                            user.Patronymic,
+                            user.BirthDate,
+                            user.Address,
+                            user.IsVip,
+                            user.IsBlocked
+                        };
+                        
+                        await connection.ExecuteAsync(query, sqlParams, transaction);
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
         }
