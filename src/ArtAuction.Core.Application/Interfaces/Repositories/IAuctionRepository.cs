@@ -8,7 +8,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     public interface IAuctionRepository
     {
         Task<Auction> GetAuctionAsync(int auctionNumber);
-        Task<IEnumerable<Auction>> GetAuctions(
+        Task<IEnumerable<Auction>> GetAuctionsAsync(
             SortingRule sort, 
             IEnumerable<string> filterCategories, 
             decimal? minCurrentPrice,

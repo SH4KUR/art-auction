@@ -69,7 +69,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return auction;
         }
 
-        public async Task<IEnumerable<Auction>> GetAuctions(
+        public async Task<IEnumerable<Auction>> GetAuctionsAsync(
             SortingRule sort, 
             IEnumerable<string> filterCategories, 
             decimal? minCurrentPrice, 

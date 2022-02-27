@@ -22,6 +22,8 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         private const string AuctionId = "{499C0593-F1DC-4254-A449-5CC4E134366C}";
         private const int AuctionNumber = 14698847;
         private const string LotId = "{C60D7A78-E817-4B00-8AF3-07326E329CC0}";
+
+        private const string CategoryId = "{457F1C0D-7B0C-400B-AD50-2F7DF874F3F1}";
         private const string CategoryName = "Some Test CategoryName";
         
         private const string SellerId = "{3EDF125C-64BC-4487-93DE-85E17E902FA7}";
@@ -29,11 +31,12 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 
         private const string DateTime1 = "2022-01-01 12:30:30";
         private const string DateTime2 = "2022-01-02 11:45:20";
-
+        
         [Fact, MockAutoData]
         [UseUser(UserId = SellerId)]
         [UseUser(UserId = UserId)]
-        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, LotId = LotId, SellerId = SellerId)]
+        [UseCategory(CategoryId = CategoryId, CategoryName = CategoryName)]
+        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, LotId = LotId, CategoryId = CategoryId, SellerId = SellerId)]
         [UseBid(AuctionId = AuctionId, UserId = UserId, DateTime = DateTime1)]
         [UseBid(AuctionId = AuctionId, UserId = UserId, DateTime = DateTime2)]
         [UseMessage(AuctionId = AuctionId, UserId = SellerId, DateTime = DateTime1)]
@@ -96,7 +99,8 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         [Theory, MockAutoData]
         [UseUser(UserId = SellerId)]
         [UseUser(UserId = UserId)]
-        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId)]
+        [UseCategory(CategoryId = CategoryId, CategoryName = CategoryName)]
+        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId, CategoryId = CategoryId)]
         [RemoveBidsAfter(AuctionId)]
         public async Task repository_adds_bid_correctly(
             Bid bid
@@ -123,7 +127,8 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         [Theory, MockAutoData]
         [UseUser(UserId = SellerId)]
         [UseUser(UserId = UserId)]
-        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId)]
+        [UseCategory(CategoryId = CategoryId, CategoryName = CategoryName)]
+        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId, CategoryId = CategoryId)]
         [RemoveMessagesAfter(AuctionId)]
         public async Task repository_adds_messages_correctly(
             Message message
@@ -150,7 +155,8 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
         [Fact, MockAutoData]
         [UseUser(UserId = SellerId)]
         [UseUser(UserId = UserId)]
-        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId)]
+        [UseCategory(CategoryId = CategoryId, CategoryName = CategoryName)]
+        [UseAuction(AuctionId = AuctionId, AuctionNumber = AuctionNumber, SellerId = SellerId, CategoryId = CategoryId)]
         public async Task repository_gets_categories_correctly()
         {
             // Arrange
@@ -162,7 +168,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             // Assert
             result.Should().NotBeNullOrEmpty();
         }
-
+        
         #region Private methods
 
         private async Task<Auction> GetAuctionAsync(string sellerId)
