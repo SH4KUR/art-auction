@@ -70,7 +70,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return auction;
         }
 
-        public async Task<AuctionsWithTotalCount> GetAuctionsAsync(
+        public async Task<AuctionsWithPaging> GetAuctionsAsync(
             SortingRule sort, 
             IEnumerable<string> filterCategories, 
             decimal? minCurrentPrice, 
@@ -149,10 +149,12 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 }
             }
 
-            return new AuctionsWithTotalCount
+            return new AuctionsWithPaging
             {
                 Auctions = auctions,
-                TotalCount = totalCount
+                TotalCount = totalCount,
+                CurrentPage = pageNumber,
+                RowsOnPage = rowsOnPage
             };
         }
 
