@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ArtAuction.Core.Application.Commands
 {
-    public class GetAuctionListCommand : IRequest<AuctionCatalogWithPagingDto>
+    public class GetAuctionCatalogCommand : IRequest<AuctionCatalogWithPagingDto>
     {
         public SortingRule Sorting { get; set; }
         public IEnumerable<string> Categories { get; set; }

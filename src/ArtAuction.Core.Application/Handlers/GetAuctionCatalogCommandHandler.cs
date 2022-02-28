@@ -10,18 +10,18 @@ using MediatR;
 
 namespace ArtAuction.Core.Application.Handlers
 {
-    public class GetAuctionListCommandHandler : IRequestHandler<GetAuctionListCommand, AuctionCatalogWithPagingDto>
+    public class GetAuctionCatalogCommandHandler : IRequestHandler<GetAuctionCatalogCommand, AuctionCatalogWithPagingDto>
     {
         private readonly IAuctionRepository _auctionRepository;
         private readonly IUserRepository _userRepository;
         
-        public GetAuctionListCommandHandler(IAuctionRepository auctionRepository, IUserRepository userRepository)
+        public GetAuctionCatalogCommandHandler(IAuctionRepository auctionRepository, IUserRepository userRepository)
         {
             _auctionRepository = auctionRepository;
             _userRepository = userRepository;
         }
 
-        public async Task<AuctionCatalogWithPagingDto> Handle(GetAuctionListCommand request, CancellationToken cancellationToken)
+        public async Task<AuctionCatalogWithPagingDto> Handle(GetAuctionCatalogCommand request, CancellationToken cancellationToken)
         {
             var auctionsWithPaging = await _auctionRepository.GetAuctionsAsync(
                 request.Sorting,
