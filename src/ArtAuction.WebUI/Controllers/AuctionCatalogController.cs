@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Domain.Enums;
 using ArtAuction.WebUI.Models.AuctionCatalog;
@@ -22,9 +24,16 @@ namespace ArtAuction.WebUI.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.Categories = await GetCategorySelectListItems();
             return View();
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetCategorySelectListItems()
+        {
+            var categories = await _mediator.Send(new GetCategoriesCommand());
+            return categories.Select(category => new SelectListItem { Text = category, Value = category });
         }
 
         [HttpGet]
