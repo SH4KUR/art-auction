@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
@@ -8,7 +9,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArtAuction.WebUI.Controllers
@@ -18,22 +18,43 @@ namespace ArtAuction.WebUI.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
+        private const int LotsOnPage = 10;
+        
         public AuctionCatalogController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
         }
-
-        public async Task<IActionResult> Index()
+        
+        [HttpGet]
+        public async Task<IActionResult> Index(AuctionCatalogViewModel model, string[] category)
         {
-            ViewBag.Categories = await GetCategorySelectListItems();
-            return View();
+            var auctionCatalogWithPagingDto = await _mediator.Send(new GetAuctionCatalogCommand((SortingRule) model.Sort, category,
+                model.Filter.MinCurrentPrice, model.Filter.MaxCurrentPrice, model.Pagination.PageNumber, LotsOnPage, false));
+            
+            model.Pagination.TotalPages = (int)Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double)LotsOnPage);
+            model.Filter.Categories = await GetCategorySelectListItems(category);
+            
+            return View(model);
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetCategorySelectListItems()
+        private async Task<IEnumerable<SelectListItem>> GetCategorySelectListItems(string[] selectedCategories = null)
         {
             var categories = await _mediator.Send(new GetCategoriesCommand());
-            return categories.Select(category => new SelectListItem { Text = category, Value = category });
+            var selectListItems = categories.Select(category => new SelectListItem { Text = category, Value = category }).ToArray();
+
+            if (selectedCategories != null && selectedCategories.Any())
+            {
+                foreach (var selectListItem in selectListItems)
+                {
+                    if (selectedCategories.Any(c => c == selectListItem.Value))
+                    {
+                        selectListItem.Selected = true;
+                    }
+                }
+            }
+
+            return selectListItems;
         }
 
         [HttpGet]

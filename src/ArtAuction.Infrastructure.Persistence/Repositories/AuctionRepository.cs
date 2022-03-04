@@ -190,13 +190,13 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         {
             return sort switch
             {
-                SortingRule.Default => "a.[datetime_create] DESC",      // Default sorting by "Newest Created"
+                SortingRule.Default => "a.[creation_datetime] DESC",      // Default sorting by "Newest Created"
                 SortingRule.CurrentPriceAsc => "a.[current_price]",
                 SortingRule.CurrentPriceDesc => "a.[current_price] DESC",
-                SortingRule.DateTimeAuctionCreateAsc => "a.[datetime_create]",
-                SortingRule.DateTimeAuctionCreateDesc => "a.[datetime_create] DESC",
-                SortingRule.DateTimeAuctionEndAsc => "a.[end_billing_date]",
-                SortingRule.DateTimeAuctionEndDesc => "a.[end_billing_date] DESC",
+                SortingRule.DateTimeAuctionCreateAsc => "a.[creation_datetime]",
+                SortingRule.DateTimeAuctionCreateDesc => "a.[creation_datetime] DESC",
+                SortingRule.DateTimeAuctionEndAsc => "a.[end_billing_datetime]",
+                SortingRule.DateTimeAuctionEndDesc => "a.[end_billing_datetime] DESC",
                 _ => throw new ArgumentOutOfRangeException(nameof(sort), sort, "Sorting rule error!")
             };
         }
