@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using ArtAuction.Core.Application.Commands;
+using ArtAuction.WebUI.Models.AuctionCatalog;
+using ArtAuction.WebUI.Models.Lot;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +23,16 @@ namespace ArtAuction.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int auctionNumber)
         {
-            return View();
+            var lot = await _mediator.Send(new GetAuctionLotCommand(auctionNumber));
+
+            var model = new AuctionLotViewModel
+            {
+                AuctionLot = _mapper.Map<AuctionViewModel>(lot.AuctionLot),
+                Bids = lot.Bids.Select(b => _mapper.Map<BidViewModel>(b)),
+                Messages = lot.Messages.Select(m => _mapper.Map<MessageViewModel>(m))
+            };
+
+            return View(model);
         }
     }
 }
