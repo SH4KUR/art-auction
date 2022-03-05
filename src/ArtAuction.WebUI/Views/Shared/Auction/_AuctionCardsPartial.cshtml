@@ -3,6 +3,10 @@
 <div class="d-flex flex-wrap justify-content-around">
     @foreach (var auction in Model.Auctions)
     {
-        <div class="col-xl-4 col-sm-6 p-2">@auction.LotName</div>
+        <div class="col-xl-4 col-sm-6 p-2">
+            <a class="btn btn-outline-secondary" asp-action="Index" asp-controller="Lot" asp-route-auctionNumber="@auction.AuctionNumber">
+                @auction.AuctionNumber
+            </a>
+        </div>
     }
 </div>
