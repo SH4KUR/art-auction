@@ -25,15 +25,43 @@ namespace ArtAuction.WebUI.Controllers
             _mediator = mediator;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Index(AuctionCatalogViewModel model, string[] category)
+        public async Task<IActionResult> Index(
+            string[] category,
+            Sort sort,
+            decimal? minCurrentPrice,
+            decimal? maxCurrentPrice,
+            int pageNumber = 1)
         {
-            var auctionCatalogWithPagingDto = await _mediator.Send(new GetAuctionCatalogCommand((SortingRule) model.Sort, category,
-                model.Filter.MinCurrentPrice, model.Filter.MaxCurrentPrice, model.Pagination.PageNumber, LotsOnPage, false));
-            
-            model.Pagination.TotalPages = (int)Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double)LotsOnPage);
-            model.Filter.Categories = await GetCategorySelectListItems(category);
+            category = category.Length == 1 ? category.First().Split(',') : category;   // workaround
+
+            var auctionCatalogWithPagingDto = await _mediator.Send(new GetAuctionCatalogCommand(
+                (SortingRule) sort,
+                category,
+                minCurrentPrice, 
+                maxCurrentPrice, 
+                pageNumber, 
+                LotsOnPage, 
+                false)
+            );
+
+            var model = new AuctionCatalogViewModel
+            {
+                Auctions = auctionCatalogWithPagingDto.Auctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
+                Sort = sort,
+                Filter =
+                {
+                    Categories = await GetCategorySelectListItems(category),
+                    MinCurrentPrice = minCurrentPrice,
+                    MaxCurrentPrice = maxCurrentPrice
+                },
+                Pagination =
+                {
+                    TotalPages = (int) Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double) LotsOnPage),
+                    PageNumber = pageNumber
+                }
+            };
             
             return View(model);
         }
