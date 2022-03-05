@@ -1,0 +1,8 @@
+﻿@model ArtAuction.WebUI.Models.AuctionCatalog.AuctionCatalogViewModel
+
+<div class="d-flex flex-wrap justify-content-around">
+    @foreach (var auction in Model.Auctions)
+    {
+        <div class="col-xl-4 col-sm-6 p-2">@auction.LotName</div>
+    }
+</div>

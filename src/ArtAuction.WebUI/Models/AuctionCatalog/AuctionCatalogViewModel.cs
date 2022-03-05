@@ -7,6 +7,7 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
     {
         public IEnumerable<AuctionViewModel> Auctions { get; set; }
         public Sort Sort { get; set; }
+        public OnPage OnPage { get; set; }
         public AuctionFilterViewModel Filter { get; set; } = new();
         public PageViewModel Pagination { get; set; } = new();
     }
@@ -20,5 +21,12 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
         [Display(Name = "Creating Auction (from old to new)")] DateTimeAuctionCreateDesc,
         [Display(Name = "End Auction (from short to long)")] DateTimeAuctionEndAsc,     // TODO: correct display naming
         [Display(Name = "End Auction (from long to short)")] DateTimeAuctionEndDesc
+    }
+
+    public enum OnPage
+    {
+        [Display(Name = "10")] OnPage10 = 10,
+        [Display(Name = "20")] OnPage20 = 20,
+        [Display(Name = "30")] OnPage30 = 30
     }
 }

@@ -17,8 +17,6 @@ namespace ArtAuction.WebUI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-
-        private const int LotsOnPage = 10;
         
         public AuctionCatalogController(IMediator mediator, IMapper mapper)
         {
@@ -32,7 +30,8 @@ namespace ArtAuction.WebUI.Controllers
             Sort sort,
             decimal? minCurrentPrice,
             decimal? maxCurrentPrice,
-            int pageNumber = 1)
+            int pageNumber = 1,
+            OnPage onPage = OnPage.OnPage10)
         {
             category = category.Length == 1 ? category.First().Split(',') : category;   // workaround
 
@@ -41,8 +40,8 @@ namespace ArtAuction.WebUI.Controllers
                 category,
                 minCurrentPrice, 
                 maxCurrentPrice, 
-                pageNumber, 
-                LotsOnPage, 
+                pageNumber,
+                (int) onPage, 
                 false)
             );
 
@@ -50,6 +49,7 @@ namespace ArtAuction.WebUI.Controllers
             {
                 Auctions = auctionCatalogWithPagingDto.Auctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
                 Sort = sort,
+                OnPage = onPage,
                 Filter =
                 {
                     Categories = await GetCategorySelectListItems(category),
@@ -58,7 +58,7 @@ namespace ArtAuction.WebUI.Controllers
                 },
                 Pagination =
                 {
-                    TotalPages = (int) Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double) LotsOnPage),
+                    TotalPages = (int) Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double) onPage),
                     PageNumber = pageNumber
                 }
             };

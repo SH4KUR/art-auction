@@ -1,5 +1,4 @@
 ﻿@using ArtAuction.Core.Domain.Enums
-@using ArtAuction.WebUI.Models.AuctionCatalog
 
 @model ArtAuction.WebUI.Models.AuctionCatalog.AuctionCatalogViewModel
 
@@ -18,94 +17,12 @@
 
 <form asp-action="Index" method="get">
     <div class="d-flex flex-column flex-md-row">
-        <div class="d-flex flex-column col-md-3 p-2">
-            @foreach (var category in Model.Filter.Categories)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" id="@category.Value" type="checkbox" name="category" value="@category.Value" checked="@category.Selected" />
-                    <label class="form-check-label">@category.Text</label>
-                </div>
-            }
-
-            <div class="form-group">
-                <label class="control-label">Min current price</label>
-                <input class="form-control" id="minCurrentPrice" name="minCurrentPrice" type="text" value="@Model.Filter.MinCurrentPrice" />
-            </div>
-            <div class="form-group">
-                <label class="control-label">Max current price</label>
-                <input class="form-control" id="maxCurrentPrice" name="maxCurrentPrice" type="text" value="@Model.Filter.MaxCurrentPrice" />
-            </div>
-
-            <input type="submit" class="btn btn-primary" value="Filter"
-                   asp-route-category="@string.Join(',', Model.Filter.Categories.Where(c=>c.Selected).Select(c=>c.Value))"
-                   asp-route-minCurrentPrice="@Model.Filter.MinCurrentPrice"
-                   asp-route-maxCurrentPrice="@Model.Filter.MaxCurrentPrice"
-                   asp-route-sort="@Model.Sort" />
-        </div>
+        <partial name="Auction/_FilterPartial" model="Model"/>
+        
         <div class="col-md-9 p-2">
-            <div class="d-flex justify-content-between">
-                <div class="form-group">
-                    <select id="sort" name="sort" class="form-control" asp-items="@Html.GetEnumSelectList<Sort>()"></select>
-                </div>
-                <div>On page</div>
-            </div>
-            <div class="d-flex flex-wrap justify-content-around">
-                
-                @foreach (var auction in Model.Auctions)
-                {
-                    <div class="col-xl-4 col-sm-6 p-2">@auction.LotName</div>
-                }
-                
-            </div>
-            <div class="d-flex justify-content-center">
-                <ul class="pagination">
-
-                    @if (Model.Pagination.HasPreviousPage)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-route-pageNumber="@(Model.Pagination.PageNumber - 1)"
-                               asp-route-category="@string.Join(',', Model.Filter.Categories.Where(c => c.Selected).Select(c => c.Value))"
-                               asp-route-minCurrentPrice="@Model.Filter.MinCurrentPrice"
-                               asp-route-maxCurrentPrice="@Model.Filter.MaxCurrentPrice"
-                               asp-route-sort="@Model.Sort">
-                                Previous
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
-                        </li>
-                    }
-                    
-                    <li class="page-item disabled">
-                        <a class="page-link">@(Model.Pagination.PageNumber)</a>
-                    </li>
-                    
-                    @if (Model.Pagination.HasNextPage)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-route-pageNumber="@(Model.Pagination.PageNumber + 1)"
-                               asp-route-category="@string.Join(',', Model.Filter.Categories.Where(c => c.Selected).Select(c => c.Value))"
-                               asp-route-minCurrentPrice="@Model.Filter.MinCurrentPrice"
-                               asp-route-maxCurrentPrice="@Model.Filter.MaxCurrentPrice"
-                               asp-route-sort="@Model.Sort">
-                                Next
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item disabled">
-                            <a class="page-link">Next</a>
-                        </li>
-                    }
-
-                </ul>
-            </div>
+            <partial name="Auction/_SortPartial" model="Model"/>
+            <partial name="Auction/_AuctionCardsPartial" model="Model"/>
+            <partial name="Auction/_PaginationPartial" model="Model"/>
         </div>
     </div>
 </form>
