@@ -10,8 +10,9 @@ namespace ArtAuction.Core.Domain.Entities
         public Guid LotId { get; set; }
         public Lot Lot { get; set; }
         public Guid SellerId { get; set; }
-        public DateTime StartBillingDate { get; set; }
-        public DateTime EndBillingDate { get; set; }
+        public DateTime CreationDateTime { get; set; }
+        public DateTime StartBillingDateTime { get; set; }
+        public DateTime EndBillingDateTime { get; set; }
         public decimal StartPrice { get; set; }
         public decimal CurrentPrice { get; set; }
         public decimal? FullPrice { get; set; }

@@ -1,0 +1,11 @@
+﻿@using ArtAuction.WebUI.Models.AuctionCatalog
+@model ArtAuction.WebUI.Models.AuctionCatalog.AuctionCatalogViewModel
+
+<div class="d-flex justify-content-between">
+    <div class="form-group">
+        <select asp-for="Sort" class="form-control" asp-items="@Html.GetEnumSelectList<Sort>()"></select>
+    </div>
+    <div class="form-group">
+        <select asp-for="OnPage" class="form-control" asp-items="@Html.GetEnumSelectList<OnPage>()"></select>
+    </div>
+</div>

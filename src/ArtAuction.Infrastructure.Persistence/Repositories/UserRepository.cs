@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Domain.Entities;
 using Dapper;
@@ -40,6 +41,60 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return await connection.QueryFirstOrDefaultAsync<User>(query, new
             {
                 UserLogin = login
+            });
+        }
+
+        public User GetUser(Guid userId)
+        {
+            var query = @"
+                SELECT 
+                     [user_id] AS UserId
+                    ,[login]
+                    ,[email]
+                    ,[password]
+                    ,[role]
+                    ,[first_name] AS FirstName
+                    ,[last_name] AS LastName
+                    ,[patronymic]
+                    ,[birth_date] AS BirthDate
+                    ,[address]
+                    ,[is_vip] AS IsVip
+                    ,[is_blocked] AS IsBlocked
+                FROM [dbo].[user]
+                WHERE 
+                    [user_id] = @UserId";
+
+            using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return connection.QueryFirstOrDefault<User>(query, new
+            {
+                UserId = userId
+            });
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var query = @"
+                SELECT 
+                     [user_id] AS UserId
+                    ,[login]
+                    ,[email]
+                    ,[password]
+                    ,[role]
+                    ,[first_name] AS FirstName
+                    ,[last_name] AS LastName
+                    ,[patronymic]
+                    ,[birth_date] AS BirthDate
+                    ,[address]
+                    ,[is_vip] AS IsVip
+                    ,[is_blocked] AS IsBlocked
+                FROM [dbo].[user]
+                WHERE 
+                    [user_id] = @UserId";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryFirstOrDefaultAsync<User>(query, new
+            {
+                UserId = userId
             });
         }
 
@@ -92,23 +147,31 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 await connection.OpenAsync();
                 await using (var transaction = await connection.BeginTransactionAsync())
                 {
-                    var sqlParams = new
+                    try
                     {
-                        user.Login,
-                        user.Email,
-                        user.Password,
-                        user.Role,
-                        user.FirstName,
-                        user.LastName,
-                        user.Patronymic,
-                        user.BirthDate,
-                        user.Address,
-                        user.IsVip,
-                        user.IsBlocked
-                    };
-                    
-                    await connection.ExecuteAsync(query, sqlParams, transaction);
-                    await transaction.CommitAsync();
+                        var sqlParams = new
+                        {
+                            user.Login,
+                            user.Email,
+                            user.Password,
+                            user.Role,
+                            user.FirstName,
+                            user.LastName,
+                            user.Patronymic,
+                            user.BirthDate,
+                            user.Address,
+                            user.IsVip,
+                            user.IsBlocked
+                        };
+                        
+                        await connection.ExecuteAsync(query, sqlParams, transaction);
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
         }

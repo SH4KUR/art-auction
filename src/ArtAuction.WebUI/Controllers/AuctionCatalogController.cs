@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Domain.Enums;
 using ArtAuction.WebUI.Models.AuctionCatalog;
@@ -6,7 +9,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArtAuction.WebUI.Controllers
@@ -15,16 +17,72 @@ namespace ArtAuction.WebUI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-
+        
         public AuctionCatalogController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(
+            string[] category,
+            Sort sort,
+            decimal? minCurrentPrice,
+            decimal? maxCurrentPrice,
+            int pageNumber = 1,
+            OnPage onPage = OnPage.OnPage10)
         {
-            return View();
+            category = category.Length == 1 ? category.First().Split(',') : category;   // workaround
+
+            var auctionCatalogWithPagingDto = await _mediator.Send(new GetAuctionCatalogCommand(
+                (SortingRule) sort,
+                category,
+                minCurrentPrice, 
+                maxCurrentPrice, 
+                pageNumber,
+                (int) onPage, 
+                false)
+            );
+
+            var model = new AuctionCatalogViewModel
+            {
+                Auctions = auctionCatalogWithPagingDto.Auctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
+                Sort = sort,
+                OnPage = onPage,
+                Filter =
+                {
+                    Categories = await GetCategorySelectListItems(category),
+                    MinCurrentPrice = minCurrentPrice,
+                    MaxCurrentPrice = maxCurrentPrice
+                },
+                Pagination =
+                {
+                    TotalPages = (int) Math.Ceiling(auctionCatalogWithPagingDto.Auctions.Count() / (double) onPage),
+                    PageNumber = pageNumber
+                }
+            };
+            
+            return View(model);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetCategorySelectListItems(string[] selectedCategories = null)
+        {
+            var categories = await _mediator.Send(new GetCategoriesCommand());
+            var selectListItems = categories.Select(category => new SelectListItem { Text = category, Value = category }).ToArray();
+
+            if (selectedCategories != null && selectedCategories.Any())
+            {
+                foreach (var selectListItem in selectListItems)
+                {
+                    if (selectedCategories.Any(c => c == selectListItem.Value))
+                    {
+                        selectListItem.Selected = true;
+                    }
+                }
+            }
+
+            return selectListItems;
         }
 
         [HttpGet]

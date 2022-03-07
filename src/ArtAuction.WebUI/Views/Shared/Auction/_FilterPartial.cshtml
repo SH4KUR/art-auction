@@ -1,0 +1,27 @@
+﻿@model ArtAuction.WebUI.Models.AuctionCatalog.AuctionCatalogViewModel
+
+<div class="d-flex flex-column col-md-3 p-2">
+    @foreach (var category in Model.Filter.Categories)
+    {
+        <div class="form-check">
+            <input class="form-check-input" id="@category.Value" type="checkbox" name="category" value="@category.Value" checked="@category.Selected" />
+            <label class="form-check-label">@category.Text</label>
+        </div>
+    }
+
+    <div class="form-group">
+        <label class="control-label">Min current price</label>
+        <input class="form-control" id="minCurrentPrice" name="minCurrentPrice" type="text" value="@Model.Filter.MinCurrentPrice" />
+    </div>
+    <div class="form-group">
+        <label class="control-label">Max current price</label>
+        <input class="form-control" id="maxCurrentPrice" name="maxCurrentPrice" type="text" value="@Model.Filter.MaxCurrentPrice" />
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Filter"
+           asp-route-category="@string.Join(',', Model.Filter.Categories.Where(c=>c.Selected).Select(c=>c.Value))"
+           asp-route-minCurrentPrice="@Model.Filter.MinCurrentPrice"
+           asp-route-maxCurrentPrice="@Model.Filter.MaxCurrentPrice"
+           asp-route-onPage="@Model.OnPage"
+           asp-route-sort="@Model.Sort" />
+</div>

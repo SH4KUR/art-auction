@@ -12,25 +12,16 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
     {
         public string AuctionId { get; set; } = "{6DE7B006-CA79-4180-85D6-1171283ED4C8}";
         public int AuctionNumber { get; set; } = 14698847;
-        public string LotId { get; set; } = "{5B3BC3D7-5AEC-433D-8E87-BAE7701A41AA}";
         public string SellerId { get; set; } = "{71A47031-0DB2-41DF-9FED-7A189357A260}";
         
-        private readonly string _categoryId = "{AD87B03B-EDB8-4871-BA93-E34CB6239DDA}";
+        public string LotId { get; set; } = "{5B3BC3D7-5AEC-433D-8E87-BAE7701A41AA}";
+        public string CategoryId = "{AD87B03B-EDB8-4871-BA93-E34CB6239DDA}";
 
         public override void Before(MethodInfo methodUnderTest)
         {
             After(methodUnderTest);
 
             var query = @"
-                INSERT INTO [dbo].[category] (
-                     [category_id]
-                    ,[name]
-                )
-                VALUES (
-                     @CategoryId
-                    ,'Some Test CategoryName'
-                )
-
                 INSERT INTO [dbo].[lot] (
                      [lot_id]
 	                ,[category_id]
@@ -55,8 +46,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     ,[auction_number]
                     ,[lot_id]
                     ,[seller_id]
-                    ,[start_billing_date]
-                    ,[end_billing_date]
+                    ,[creation_datetime]
+                    ,[start_billing_datetime]
+                    ,[end_billing_datetime]
                     ,[start_price]
                     ,[current_price]
                     ,[full_price]
@@ -69,6 +61,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     ,@AuctionNumber
 	                ,@LotId
 	                ,@SellerId
+                    ,GETDATE()
                     ,GETDATE()
 	                ,DATEADD(MONTH, 1, GETDATE())
 	                ,1400
@@ -86,9 +79,9 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
             {
                 AuctionId,
                 AuctionNumber,
+                SellerId,
                 LotId,
-                CategoryId = _categoryId,
-                SellerId
+                CategoryId
             });
         }
 
@@ -104,11 +97,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
 
                 DELETE FROM [dbo].[lot] 
                 WHERE 
-                    [lot_id] = @LotId
-                
-                DELETE FROM [dbo].[category] 
-                WHERE 
-                    [category_id] = @CategoryId";
+                    [lot_id] = @LotId";
 
             using (var connection = new SqlConnection(TestConfiguration.Get().GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {
@@ -118,8 +107,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.DataAttributes
                     connection.Execute(query, new
                     {
                         AuctionId,
-                        LotId,
-                        CategoryId = _categoryId
+                        LotId
                     }, transaction);
                     transaction.Commit();
                 }

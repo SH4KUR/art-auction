@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System;
+using FluentMigrator;
 
 namespace ArtAuction.Infrastructure.Persistence.Migrations
 {
@@ -12,8 +13,9 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("auction_number").AsInt32().NotNullable().Identity()
                 .WithColumn("lot_id").AsGuid().NotNullable()
                 .WithColumn("seller_id").AsGuid().NotNullable()
-                .WithColumn("start_billing_date").AsDateTime().NotNullable()
-                .WithColumn("end_billing_date").AsDateTime().NotNullable()
+                .WithColumn("creation_datetime").AsDateTime().NotNullable().WithDefaultValue(DateTime.Now)
+                .WithColumn("start_billing_datetime").AsDateTime().NotNullable()
+                .WithColumn("end_billing_datetime").AsDateTime().NotNullable()
                 .WithColumn("start_price").AsDecimal().NotNullable()
                 .WithColumn("current_price").AsDecimal().NotNullable()
                 .WithColumn("full_price").AsDecimal().Nullable().WithDefaultValue(null)

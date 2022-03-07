@@ -24,13 +24,28 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
 
         [Fact]
         [UseUser(Login = Login)]
-        public async Task repository_gets_user_correctly()
+        public async Task repository_gets_user_by_login_correctly()
         {
             // Arrange
             var sut = new UserRepository(TestConfiguration.Get());
             
             // Act
             var result = await sut.GetUserAsync(Login);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Login.Should().Be(Login);
+        }
+
+        [Fact]
+        [UseUser(UserId = UserId, Login = Login)]
+        public void repository_gets_user_by_user_id_correctly()
+        {
+            // Arrange
+            var sut = new UserRepository(TestConfiguration.Get());
+
+            // Act
+            var result = sut.GetUser(new Guid(UserId));
 
             // Assert
             result.Should().NotBeNull();
