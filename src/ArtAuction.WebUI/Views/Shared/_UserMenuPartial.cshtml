@@ -2,7 +2,9 @@
 
 <ul class="navbar-nav">
     <li class="nav-item">
-        <a class="nav-link text-dark">@HttpContextAccessor.HttpContext.User.Identity.Name</a>
+        <a asp-controller="Profile" asp-action="Index" class="nav-link text-dark">
+            @HttpContextAccessor.HttpContext.User.Identity.Name
+        </a>
     </li>
     <li class="nav-item">
         <a asp-controller="Account" asp-action="Logout" class="nav-link text-dark">Logout</a>
