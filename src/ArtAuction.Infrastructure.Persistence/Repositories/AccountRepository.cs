@@ -92,6 +92,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                 [operation_id] AS OperationId
 	                ,[account_id] AS AccountId
                     ,[date_time] AS DateTime
+                    ,[operation_type] AS OperationType
                     ,[sum_before] AS SumBefore
                     ,[sum_operation] AS SumOperation
                     ,[sum_after] AS SumAfter
@@ -113,6 +114,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                 [operation_id] AS OperationId
 	                ,[account_id] AS AccountId
                     ,[date_time] AS DateTime
+                    ,[operation_type] AS OperationType
                     ,[sum_before] AS SumBefore
                     ,[sum_operation] AS SumOperation
                     ,[sum_after] AS SumAfter
@@ -128,13 +130,22 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             }, transaction);
         }
 
-
-        public void AddOperation(Operation operation)
+        public async Task UpdateAccount(Account account)
         {
             throw new NotImplementedException();
         }
 
-        public void AddVip(Vip vip)
+        public async Task AddReplenishmentOperation(Operation operation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task AddWithdrawOperation(Operation operation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task AddVip(Vip vip)
         {
             throw new NotImplementedException();
         }

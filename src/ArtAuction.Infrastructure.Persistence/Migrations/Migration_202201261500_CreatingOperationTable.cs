@@ -11,6 +11,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("operation_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
                 .WithColumn("account_id").AsGuid().NotNullable()
                 .WithColumn("date_time").AsDateTime().NotNullable().WithDefaultValue(SystemMethods.CurrentDateTime)
+                .WithColumn("operation_type").AsInt16().NotNullable()
                 .WithColumn("sum_before").AsDecimal().NotNullable()
                 .WithColumn("sum_operation").AsDecimal().NotNullable()
                 .WithColumn("sum_after").AsDecimal().NotNullable()
