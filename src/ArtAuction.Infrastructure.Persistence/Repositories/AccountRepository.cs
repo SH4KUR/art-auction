@@ -127,5 +127,16 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 AccountId = accountId
             }, transaction);
         }
+
+
+        public void AddOperation(Operation operation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddVip(Vip vip)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

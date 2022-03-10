@@ -7,5 +7,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     public interface IAccountRepository
     {
         Task<Account> GetAccount(Guid userId);
+        void AddOperation(Operation operation);
+        void AddVip(Vip vip);
     }
 }
