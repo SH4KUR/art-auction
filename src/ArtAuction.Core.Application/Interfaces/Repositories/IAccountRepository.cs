@@ -8,8 +8,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     {
         Task<Account> GetAccount(Guid userId);
         Task UpdateAccount(Account account);
-        Task AddReplenishmentOperation(Operation operation);
-        Task AddWithdrawOperation(Operation operation);
+        Task AddOperation(Operation operation);
         Task AddVip(Vip vip);
     }
 }

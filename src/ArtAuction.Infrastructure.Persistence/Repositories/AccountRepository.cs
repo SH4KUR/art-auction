@@ -135,16 +135,11 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task AddReplenishmentOperation(Operation operation)
+        public async Task AddOperation(Operation operation)
         {
             throw new NotImplementedException();
         }
-
-        public async Task AddWithdrawOperation(Operation operation)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public async Task AddVip(Vip vip)
         {
             throw new NotImplementedException();
