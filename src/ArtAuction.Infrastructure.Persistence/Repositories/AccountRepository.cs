@@ -129,20 +129,90 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 AccountId = accountId
             }, transaction);
         }
-
-        public async Task UpdateAccount(Account account)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public async Task AddOperation(Operation operation)
         {
-            throw new NotImplementedException();
+            var query = @"
+                INSERT INTO [dbo].[operation] (
+                     [operation_id]
+	                ,[account_id]
+                    ,[date_time]
+                    ,[sum_before]
+                    ,[sum_operation]
+                    ,[sum_after]
+                    ,[description]
+                )
+                VALUES (
+                     @OperationId
+	                ,@AccountId
+                    ,@DateTime
+                    ,@SumBefore
+                    ,@SumOperation
+                    ,@SumAfter
+                    ,@Description
+                )
+
+                UPDATE [dbo].[account]
+                SET 
+                     [sum] = @SumAfter
+                    ,[last_update] = @DateTime
+                 WHERE [account_id] = @AccountId";
+            
+            await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
+            {
+                await connection.OpenAsync();
+                await using (var transaction = await connection.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        await connection.ExecuteAsync(query, new
+                        {
+                            operation.OperationId,
+                            operation.AccountId,
+                            operation.DateTime,
+                            operation.SumBefore,
+                            operation.SumOperation,
+                            operation.SumAfter,
+                            operation.Description
+                        });
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+            }
         }
         
         public async Task AddVip(Vip vip)
         {
-            throw new NotImplementedException();
+            var query = @"
+                INSERT INTO [dbo].[vip] (
+	                 [vip_id]
+                    ,[operation_id]
+                    ,[user_id]
+                    ,[date_from]
+                    ,[date_until]
+                )
+                VALUES (
+	                ,VipId
+	                ,@OperationId
+	                ,@UserId
+	                ,@DateFrom
+	                ,@DateUntil
+                )";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
+            {
+                vip.VipId,
+                vip.OperationId,
+                vip.UserId,
+                vip.DateFrom,
+                vip.DateUntil
+            });
         }
     }
 }
