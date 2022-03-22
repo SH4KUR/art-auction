@@ -31,7 +31,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[user_id] AS UserId
                     ,[sum]
                     ,[last_update] AS LastUpdate
-                FROM [ArtAuction].[dbo].[account]
+                FROM [dbo].[account]
                 WHERE
 	                [user_id] = @UserId";
 
@@ -67,7 +67,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[user_id] AS UserId
                     ,[date_from] AS DateFrom
                     ,[date_until] AS DateUntil
-                FROM [ArtAuction].[dbo].[vip]
+                FROM [dbo].[vip]
                 WHERE
 	                [user_id] = @UserId
                 ORDER BY [date_until] DESC";
@@ -97,7 +97,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[sum_operation] AS SumOperation
                     ,[sum_after] AS SumAfter
                     ,[description]
-                FROM [ArtAuction].[dbo].[operation]
+                FROM [dbo].[operation]
                 WHERE 
 	                [operation_id] = @OperationId";
 
@@ -119,7 +119,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[sum_operation] AS SumOperation
                     ,[sum_after] AS SumAfter
                     ,[description]
-                FROM [ArtAuction].[dbo].[operation]
+                FROM [dbo].[operation]
                 WHERE 
 	                [account_id] = @AccountId
                 ORDER BY [date_time] DESC";
@@ -197,7 +197,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[date_until]
                 )
                 VALUES (
-	                ,VipId
+	                ,@VipId
 	                ,@OperationId
 	                ,@UserId
 	                ,@DateFrom
