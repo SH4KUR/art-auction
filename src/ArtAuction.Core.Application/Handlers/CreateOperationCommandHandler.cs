@@ -28,6 +28,7 @@ namespace ArtAuction.Core.Application.Handlers
 
             var operation = new Operation
             {
+                OperationId = Guid.NewGuid(),
                 AccountId = account.AccountId,
                 OperationType = request.OperationType,
                 DateTime = DateTime.Now,

@@ -156,7 +156,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 SET 
                      [sum] = @SumAfter
                     ,[last_update] = @DateTime
-                 WHERE [account_id] = @AccountId";
+                WHERE [account_id] = @AccountId";
             
             await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
             {

@@ -304,7 +304,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 )
 
                 INSERT INTO [dbo].[auction] (
-                     [lot_id]
+                     [auction_id]
+                    ,[lot_id]
                     ,[seller_id]
                     ,[creation_datetime]
                     ,[start_billing_datetime]
@@ -317,7 +318,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[customer_id]
                 )
                 VALUES (
-                     @LotId
+                     @AuctionId
+                    ,@LotId
 	                ,@SellerId
                     ,@CreationDateTime
                     ,@StartBillingDateTime
@@ -339,6 +341,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     {
                         await connection.ExecuteAsync(query, new
                         {
+                            auction.AuctionId,
                             auction.Lot.LotId,
                             CategoryName = auction.Lot.Category.Name,
                             LotName = auction.Lot.Name,
