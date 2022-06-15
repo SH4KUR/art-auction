@@ -286,18 +286,17 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         public async Task AddAuctionAsync(Auction auction)
         {
             var query = @"
-                DECLARE @InsertedLot TABLE ([lot_id] UNIQUEIDENTIFIER)
-
                 INSERT INTO [dbo].[lot] (
-                     [category_id]
+                     [lot_id]
+                    ,[category_id]
                     ,[name]
                     ,[painting_date]
                     ,[photo]
                     ,[description]
                 )
-                OUTPUT INSERTED.[lot_id] INTO @InsertedLot
                 VALUES (
-                     (SELECT TOP 1 [category_id] FROM [dbo].[category] WHERE [name] = @CategoryName)
+                     @LotId
+                    ,(SELECT [category_id] FROM [dbo].[category] WHERE [name] = @CategoryName)
                     ,@LotName
                     ,@PaintingDate
                     ,@Photo
@@ -305,7 +304,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 )
 
                 INSERT INTO [dbo].[auction] (
-                     [lot_id]
+                     [auction_id]
+                    ,[lot_id]
                     ,[seller_id]
                     ,[creation_datetime]
                     ,[start_billing_datetime]
@@ -318,9 +318,10 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[customer_id]
                 )
                 VALUES (
-                     (SELECT TOP 1 [lot_id] FROM @InsertedLot)
+                     @AuctionId
+                    ,@LotId
 	                ,@SellerId
-                    ,GETDATE()
+                    ,@CreationDateTime
                     ,@StartBillingDateTime
 	                ,@EndBillingDateTime
 	                ,@StartPrice
@@ -340,12 +341,15 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     {
                         await connection.ExecuteAsync(query, new
                         {
+                            auction.AuctionId,
+                            auction.Lot.LotId,
                             CategoryName = auction.Lot.Category.Name,
                             LotName = auction.Lot.Name,
                             auction.Lot.PaintingDate,
                             auction.Lot.Photo,
                             auction.Lot.Description,
                             auction.SellerId,
+                            auction.CreationDateTime,
                             auction.StartBillingDateTime,
                             auction.EndBillingDateTime,
                             auction.StartPrice,
@@ -369,23 +373,27 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         {
             var query = @"
                 INSERT INTO [dbo].[bid] (
-                     [user_id]
+                     [bid_id]
+                    ,[user_id]
                     ,[auction_id]
                     ,[date_time]
                     ,[sum]
                 )
                 VALUES (
-                     @UserId
+                     @BidId
+                    ,@UserId
 	                ,@AuctionId
-	                ,GETDATE()
+	                ,@DateTime
 	                ,@Sum
                 )";
 
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             await connection.ExecuteAsync(query, new
             {
+                bid.BidId,
                 bid.UserId,
                 bid.AuctionId,
+                bid.DateTime,
                 bid.Sum
             });
         }
@@ -394,16 +402,18 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         {
             var query = @"
                 INSERT INTO [dbo].[message] (
-	                 [user_id]
+                     [message_id]
+	                ,[user_id]
                     ,[auction_id]
                     ,[date_time]
                     ,[message_text]
                     ,[is_admin]
                 )
                 VALUES (
-	                 @UserId
+                     @MessageId
+	                ,@UserId
 	                ,@AuctionId
-	                ,GETDATE()
+	                ,@DateTime
 	                ,@MessageText
 	                ,@IsAdmin
                 )";
@@ -411,8 +421,10 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             await connection.ExecuteAsync(query, new
             {
+                message.MessageId,
                 message.UserId,
                 message.AuctionId,
+                message.DateTime,
                 message.MessageText,
                 message.IsAdmin
             });

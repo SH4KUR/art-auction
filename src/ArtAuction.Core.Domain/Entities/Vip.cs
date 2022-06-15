@@ -9,5 +9,7 @@ namespace ArtAuction.Core.Domain.Entities
         public Guid UserId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateUntil { get; set; }
+
+        public Operation Operation { get; set; }
     }
 }

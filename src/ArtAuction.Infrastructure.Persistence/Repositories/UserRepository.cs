@@ -101,10 +101,9 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         public async Task AddUserAsync(User user)
         {
             var query = @"
-                DECLARE @InsertedUser TABLE ([user_id] UNIQUEIDENTIFIER)
-                    
                 INSERT INTO [dbo].[user] (
-	                 [login]
+                     [user_id]
+	                ,[login]
 	                ,[email]
 	                ,[password]
 	                ,[role]
@@ -116,9 +115,9 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,[is_vip]
 	                ,[is_blocked]
                 )
-                OUTPUT INSERTED.[user_id] INTO @InsertedUser
                 VALUES (
-	                 @Login
+                     @UserId
+	                ,@Login
 	                ,@Email
 	                ,@Password
 	                ,@Role
@@ -137,7 +136,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[last_update]
                 )
                 VALUES (
-	                 (SELECT TOP 1 [user_id] FROM @InsertedUser)
+	                 @UserId
 	                ,0
 	                ,GETDATE()
                 )";
@@ -151,6 +150,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     {
                         var sqlParams = new
                         {
+                            user.UserId,
                             user.Login,
                             user.Email,
                             user.Password,

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
-using ArtAuction.WebUI.Models.Account;
+using ArtAuction.WebUI.Models.UserAccount;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtAuction.WebUI.Controllers
 {
-    public class AccountController : Controller
+    public class UserAccountController : Controller
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         
-        public AccountController(IMediator mediator, IMapper mapper)
+        public UserAccountController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;

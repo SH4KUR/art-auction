@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Application.Interfaces.Repositories;
@@ -25,9 +26,10 @@ namespace ArtAuction.Core.Application.Handlers
             {
                 return false;   // TODO: Add error handling
             }
-            
+ 
             var auction = new Auction
             {
+                AuctionId = Guid.NewGuid(),
                 SellerId = sellerUser.UserId,
                 
                 StartPrice = request.StartPrice,
@@ -40,6 +42,7 @@ namespace ArtAuction.Core.Application.Handlers
                 
                 Lot = new Lot
                 {
+                    LotId = Guid.NewGuid(),
                     Name = request.LotName,
                     Category = new Category { Name = request.CategoryName },
                     PaintingDate = request.PaintingDate,

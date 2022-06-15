@@ -81,6 +81,7 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             
             auction.SellerId = new Guid(SellerId);
             auction.Lot.Category.Name = CategoryName;
+            auction.CreationDateTime = DateTime.Now;
 
             // Act
             await sut.AddAuctionAsync(auction);
