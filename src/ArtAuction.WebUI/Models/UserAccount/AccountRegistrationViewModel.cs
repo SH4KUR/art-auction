@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using ArtAuction.Core.Domain.Enums;
 
-namespace ArtAuction.WebUI.Models.Account
+namespace ArtAuction.WebUI.Models.UserAccount
 {
     public class AccountRegistrationViewModel
     {

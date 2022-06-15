@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Application.Interfaces.Repositories;
@@ -29,6 +30,7 @@ namespace ArtAuction.Core.Application.Handlers
 
             var addedUser = new User
             {
+                UserId = Guid.NewGuid(),
                 Login = request.Login,
                 Email = request.Email,
                 Password = _passwordService.GetHash(request.Password),

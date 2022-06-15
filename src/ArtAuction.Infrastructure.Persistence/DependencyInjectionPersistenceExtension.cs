@@ -23,6 +23,7 @@ namespace ArtAuction.Infrastructure.Persistence
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuctionRepository, AuctionRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             
             return services;
         }

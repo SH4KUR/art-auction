@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ArtAuction.WebUI.Models.Account
+namespace ArtAuction.WebUI.Models.UserAccount
 {
     public class AccountLoginViewModel
     {
