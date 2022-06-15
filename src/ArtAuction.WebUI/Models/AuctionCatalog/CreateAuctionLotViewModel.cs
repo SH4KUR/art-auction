@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace ArtAuction.WebUI.Models.AuctionCatalog
 {
@@ -15,7 +16,7 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
         public string PaintingDate { get; set; }
         
         [Required]
-        public string Photo { get; set; }
+        public IFormFile Image { get; set; }
         
         [Required]
         public string Description { get; set; }

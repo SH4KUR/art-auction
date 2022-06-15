@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Application.Handlers;
@@ -67,7 +68,8 @@ namespace ArtAuction.Core.UnitTests.Handlers
             auction.CurrentPrice.Should().Be(request.StartPrice);
             auction.FullPrice.Should().Be(request.FullPrice);
             auction.BidStep.Should().Be(request.BidStep);
-            
+
+            auction.CreationDateTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
             auction.StartBillingDateTime.Should().Be(request.StartBillingDate);
             auction.EndBillingDateTime.Should().Be(request.EndBillingDate);
         }
@@ -105,7 +107,7 @@ namespace ArtAuction.Core.UnitTests.Handlers
             lot.Category.Name.Should().Be(request.CategoryName);
             
             lot.PaintingDate.Should().Be(request.PaintingDate);
-            lot.Photo.Should().Be(request.Photo);
+            lot.Photo.Should().BeEquivalentTo(request.Photo);
             lot.Description.Should().Be(request.Description);
         }
     }

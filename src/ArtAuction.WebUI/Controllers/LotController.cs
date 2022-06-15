@@ -32,6 +32,8 @@ namespace ArtAuction.WebUI.Controllers
                 Messages = lot.Messages.Select(m => _mapper.Map<MessageViewModel>(m))
             };
 
+            model.AuctionLot.Image = lot.AuctionLot.Photo;
+            
             return View(model);
         }
     }

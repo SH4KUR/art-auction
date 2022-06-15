@@ -37,6 +37,7 @@ namespace ArtAuction.Core.Application.Handlers
                 FullPrice = request.FullPrice,
                 BidStep = request.BidStep,
                 
+                CreationDateTime = DateTime.Now,
                 StartBillingDateTime = request.StartBillingDate,
                 EndBillingDateTime = request.EndBillingDate,
                 
@@ -48,7 +49,7 @@ namespace ArtAuction.Core.Application.Handlers
                     PaintingDate = request.PaintingDate,
                     Photo = request.Photo,
                     Description = request.Description
-                }
+                }, 
             };
 
             await _auctionRepository.AddAuctionAsync(auction);

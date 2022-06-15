@@ -9,7 +9,7 @@ namespace ArtAuction.Core.Domain.Entities
         public Category Category { get; set; }
         public string Name { get; set; }
         public string PaintingDate { get; set; }
-        public string Photo { get; set; }
+        public byte[] Photo { get; set; }
         public string Description { get; set; }
     }
 }

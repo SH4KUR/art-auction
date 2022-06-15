@@ -6,4 +6,6 @@
 
 <div class="text-center">
     <h1 class="display-4">Lot @Model.AuctionLot.AuctionNumber</h1>
+    
+    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.AuctionLot.Image)" alt="@Model.AuctionLot.LotName Photo"/>
 </div>

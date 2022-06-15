@@ -23,7 +23,7 @@ namespace ArtAuction.Core.Application.DTO
         public string CategoryName { get; set; }
         public string LotName { get; set; }
         public string PaintingDate { get; set; }
-        public string Photo { get; set; }
+        public byte[] Photo { get; set; }
         public string Description { get; set; }
     }
 }

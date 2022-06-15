@@ -11,7 +11,7 @@
 </div>
 <div class="d-flex justify-content-center align-items-center">
     <div class="col-md-6">
-        <form asp-action="AddAuction">
+        <form enctype="multipart/form-data" asp-action="AddAuction">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input asp-for="SellerLogin" class="form-control" value="@(User.FindFirst(ClaimTypes.Name).Value)" hidden />
@@ -32,9 +32,9 @@
                 <span asp-validation-for="PaintingDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Photo" class="control-label">Photo</label>
-                <input asp-for="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <label asp-for="Image" class="control-label">Image</label>
+                <input asp-for="Image" type="file" accept="image/*" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label">Description</label>

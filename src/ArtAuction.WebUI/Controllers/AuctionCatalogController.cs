@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
@@ -99,10 +100,26 @@ namespace ArtAuction.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isCreated = await _mediator.Send(_mapper.Map<CreateAuctionCommand>(model));
-                if (isCreated)
+                await using (var memoryStream = new MemoryStream())
                 {
-                    return RedirectToAction("Index", "Home");   // TODO: Redirect to Profile/MyAuctions
+                    await model.Image.CopyToAsync(memoryStream);
+
+                    // upload the file if less than 2 MB
+                    if (memoryStream.Length < 2097152)
+                    {
+                        var command = _mapper.Map<CreateAuctionCommand>(model);
+                        command.Photo = memoryStream.ToArray();
+
+                        var isCreated = await _mediator.Send(command);
+                        if (isCreated)
+                        {
+                            return RedirectToAction("Index", "Home");   // TODO: Redirect to Profile/MyAuctions
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Image", "The Image is too large. It should be less than 2 MB.");
+                    }
                 }
                 
                 ModelState.AddModelError(string.Empty, "Something went wrong!");   // TODO: Add correct errors handling

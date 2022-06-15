@@ -8,7 +8,7 @@ namespace ArtAuction.Core.Application.Commands
         public string LotName { get; set; }
         public string CategoryName { get; set; }
         public string PaintingDate { get; set; }
-        public string Photo { get; set; }
+        public byte[] Photo { get; set; }
         public string Description { get; set; }
         public string SellerLogin { get; set; }
         public DateTime StartBillingDate { get; set; }

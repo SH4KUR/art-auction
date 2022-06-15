@@ -23,6 +23,7 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
         public string CategoryName { get; set; }
         public string LotName { get; set; }
         public string PaintingDate { get; set; }
-        public string Photo { get; set; }
+        
+        public byte[] Image { get; set; }
     }
 }
