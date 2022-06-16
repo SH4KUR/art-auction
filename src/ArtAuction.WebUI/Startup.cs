@@ -70,7 +70,8 @@ namespace ArtAuction.WebUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<ChatLotHub>("/chatLotHub");
+                
+                endpoints.MapHub<LotPageHub>("/pageLotHub");
             });
             
             // uncomment this block of code with the first run to create and seed the database

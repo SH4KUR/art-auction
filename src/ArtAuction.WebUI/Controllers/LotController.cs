@@ -36,5 +36,17 @@ namespace ArtAuction.WebUI.Controllers
             
             return View(model);
         }
+
+        [HttpPost]
+        public async Task PlaceBid()
+        {
+
+        }
+
+        [HttpPost]
+        public async Task SendMessage()
+        {
+
+        }
     }
 }
