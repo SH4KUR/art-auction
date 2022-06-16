@@ -1,6 +1,7 @@
 using System;
 using ArtAuction.Core.Application;
 using ArtAuction.Infrastructure.Persistence;
+using ArtAuction.WebUI.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ namespace ArtAuction.WebUI
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(WebUiLayerMappingProfile)));
 
             services.AddControllersWithViews();
+            services.AddSignalR();
 
             services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -68,8 +70,9 @@ namespace ArtAuction.WebUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ChatLotHub>("/chatLotHub");
             });
-
+            
             // uncomment this block of code with the first run to create and seed the database
             DatabaseEnsure.Run(Configuration);
             app.Migrate();
