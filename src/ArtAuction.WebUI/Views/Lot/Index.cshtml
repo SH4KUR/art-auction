@@ -15,13 +15,80 @@
     </div>
     <div>
         <form action="javascript:void(0);" method="POST" onsubmit="sendMessage()">
-            <input id="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
-            <input type="text" id="messageText" placeholder="Message...">
+            <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
+            <input id="messageText" name="messageText" type="text" placeholder="Message...">
             <input type="submit" value="Send">
         </form>
-    </div>
+</div>
 </div>
 
 
+
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/lotPage.js"></script>
+
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl('/lotPageHub').build();
+
+    connection.on('RefreshChatMessages', function () {
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/GetMessages', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => showMessages(data))
+            .function(error => console.error('Unable to fetch messages.', error));
+    });
+
+    connection.on('RefreshCurrentPrice', function () {
+
+    });
+
+    connection
+        .start()
+        .then(function () {
+            var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+            connection.invoke('JoinAuctionLotRoom', auctionNumber);
+            connection.invoke('RefreshChatMessages', auctionNumber);
+        })
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    function showMessages(messages) {
+        var chat = document.getElementById('chat');
+
+        while (chat.firstChild) {
+            chat.removeChild(chat.firstChild);
+        }
+
+        messages.forEach(message => {
+            var messageElem = document.createElement('li');
+            messageElem.textContent = '[' + message.dateTime + ']' + message.userLogin + ' - ' + message.messageText;
+
+            chat.appendChild(messageElem);
+        });
+    }
+
+    function sendMessage() {
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/SendMessage', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                AuctionNumber: auctionNumber,
+                MessageText: document.getElementById('messageText').value
+            })
+        });
+    }
+</script>

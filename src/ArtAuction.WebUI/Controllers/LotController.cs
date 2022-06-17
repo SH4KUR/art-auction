@@ -7,7 +7,6 @@ using ArtAuction.WebUI.Models.AuctionCatalog;
 using ArtAuction.WebUI.Models.Lot;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
@@ -43,32 +42,31 @@ namespace ArtAuction.WebUI.Controllers
             
             return View(model);
         }
-
-        [Authorize]
-        [HttpPost]
-        public async Task PlaceBid()
-        {
-            
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task SendMessage(int auctionId, string message)
+        
+        [HttpPost("{auctionNumber}/SendMessage")]
+        public async Task SendMessage([FromBody] MessageModel model)
         {
             await _mediator.Send(new AddAuctionMessageCommand
             {
                 Login = User?.FindFirst(ClaimTypes.Name)?.Value,
-                AuctionNumber = auctionId,
-                Message = message
+                AuctionNumber = model.AuctionNumber,
+                Message = model.MessageText
             });
-            
-            await _hubContext.Clients.Group(auctionId.ToString()).SendAsync("ReceiveChatMessages");
+
+            await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshChatMessages");
         }
 
         [HttpGet("{auctionNumber}/GetMessages")]
         public async Task<JsonResult> GetMessages(int auctionNumber)
         {
-            return Json(await _mediator.Send(new GetAuctionMessagesCommand { AuctionNumber = auctionNumber }));
+            var messages = await _mediator.Send(new GetAuctionMessagesCommand { AuctionNumber = auctionNumber });
+            return Json(messages.OrderBy(m => m.DateTime));
         }
+    }
+
+    public class MessageModel
+    {
+        public int AuctionNumber { get; set; }
+        public string MessageText { get; set; }
     }
 }
