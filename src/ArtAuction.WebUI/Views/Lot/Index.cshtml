@@ -63,7 +63,7 @@
     function showMessages(messages) {
         var chat = document.getElementById('chat');
 
-        while (chat.firstChild) {
+        while (chat.firstChild) {       // TODO: Refactor for adding only last message
             chat.removeChild(chat.firstChild);
         }
 
@@ -82,13 +82,14 @@
             method: 'POST',
             credentials: 'include',
             headers: {
-                'Accept': 'application/json; charset=utf-8',
-                'Content-Type': 'application/json;charset=UTF-8'
+                'Accept': 'application/json; charset=UTF-8',
+                'Content-Type': 'application/json; charset=UTF-8'
             },
             body: JSON.stringify({
                 AuctionNumber: auctionNumber,
                 MessageText: document.getElementById('messageText').value
             })
-        });
+        })
+            .then(document.getElementById('messageText').value = '');
     }
 </script>
