@@ -112,17 +112,17 @@
         var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
 
         fetch(auctionNumber + '/PlaceBet', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json; charset=UTF-8',
-                    'Content-Type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    AuctionNumber: auctionNumber,
-                    BidSum: document.getElementById('bidSum').value
-                })
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json; charset=UTF-8',
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify({
+                AuctionNumber: auctionNumber,
+                BidSum: document.getElementById('bidSum').value
             })
-            .then(document.getElementById('bidSum').value = '');
+        })
+        .then(document.getElementById('bidSum').value = '');
     }
 </script>
