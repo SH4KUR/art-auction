@@ -69,6 +69,18 @@ namespace ArtAuction.WebUI.Controllers
             await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
         }
 
+        [HttpPost("{auctionNumber}/BuyFullPrice")]
+        public async Task BuyFullPrice(int auctionNumber)
+        {
+            await _mediator.Send(new BuyFullPriceLotCommand
+            {
+                UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value,
+                AuctionNumber = auctionNumber
+            });
+
+            await _hubContext.Clients.Group(auctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
+        }
+
         [HttpGet("{auctionNumber}/GetMessages")]
         public async Task<JsonResult> GetMessages(int auctionNumber)
         {
