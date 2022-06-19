@@ -374,6 +374,27 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             }
         }
 
+        public async Task UpdateAuctionAsync(Auction auction)
+        {
+            var query = @"
+                UPDATE [dbo].[auction]
+                SET
+                     [current_price] = @CurrentPrice
+                    ,[is_closed] = @IsClosed
+                    ,[customer_id] = @CustomerId
+                WHERE
+                    [auction_id] = @AuctionId";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
+            {
+                auction.AuctionId,
+                auction.CurrentPrice,
+                auction.IsClosed,
+                auction.CustomerId
+            });
+        }
+
         public async Task AddBidAsync(Bid bid)
         {
             var query = @"

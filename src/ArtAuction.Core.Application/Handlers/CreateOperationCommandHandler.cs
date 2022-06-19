@@ -53,6 +53,11 @@ namespace ArtAuction.Core.Application.Handlers
 
             await _accountRepository.AddOperation(operation);
 
+            account.LastUpdate = operation.DateTime;
+            account.Sum = operation.SumAfter;
+            
+            await _accountRepository.UpdateAccount(account);
+
             return Unit.Value;
         }
     }

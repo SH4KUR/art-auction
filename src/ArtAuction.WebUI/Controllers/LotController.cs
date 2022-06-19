@@ -56,6 +56,19 @@ namespace ArtAuction.WebUI.Controllers
             await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshChatMessages");
         }
 
+        [HttpPost("{auctionNumber}/PlaceBid")]
+        public async Task PlaceBid([FromBody] PlaceBidModel model)
+        {
+            await _mediator.Send(new PlaceBidCommand
+            {
+                UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value,
+                AuctionNumber = model.AuctionNumber,
+                Sum= model.BidSum
+            });
+
+            await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
+        }
+
         [HttpGet("{auctionNumber}/GetMessages")]
         public async Task<JsonResult> GetMessages(int auctionNumber)
         {
@@ -68,5 +81,11 @@ namespace ArtAuction.WebUI.Controllers
     {
         public int AuctionNumber { get; set; }
         public string MessageText { get; set; }
+    }
+
+    public class PlaceBidModel
+    {
+        public int AuctionNumber { get; set; }
+        public decimal BidSum { get; set; }
     }
 }

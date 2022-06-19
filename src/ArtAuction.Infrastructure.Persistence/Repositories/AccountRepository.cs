@@ -58,6 +58,25 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return account;
         }
 
+        public async Task UpdateAccount(Account account)
+        {
+            var query = @"
+                UPDATE [dbo].[account]
+                SET
+                     [sum] = @Sum
+                    ,[last_update] = @LastUpdate
+                WHERE
+	                [account_id] = @AccountId";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
+            {
+                account.AccountId,
+                account.Sum,
+                account.LastUpdate
+            });
+        }
+
         private async Task<IEnumerable<Vip>> GetVips(Guid userId, IDbConnection connection, DbTransaction transaction)
         {
             var query = @"

@@ -12,7 +12,8 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
         Task<AuctionsWithPaging> GetAuctionsAsync(SortingRule sort, IEnumerable<string> filterCategories, decimal? minCurrentPrice,
             decimal? maxCurrentPrice, int pageNumber = 1, int rowsOnPage = 10, bool isClosed = false);
         Task AddAuctionAsync(Auction auction);
-        
+        Task UpdateAuctionAsync(Auction auction);
+
         Task AddBidAsync(Bid bid);
         Task AddMessageAsync(Message message);
 
