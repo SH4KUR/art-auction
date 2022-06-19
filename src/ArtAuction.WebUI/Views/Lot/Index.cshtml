@@ -6,6 +6,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Lot @Model.AuctionLot.AuctionNumber</h1>
+    <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
 
     <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.AuctionLot.Image)" alt="@Model.AuctionLot.LotName Photo" />
 
@@ -14,12 +15,16 @@
         </ul>
     </div>
     <div>
+        <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
+            <input id="bidSum" name="bidSum" type="number" min="@Model.AuctionLot.CurrentPrice" step="@Model.AuctionLot.BidStep">
+            <input type="submit" value="Place a Bet">
+        </form>
+
         <form action="javascript:void(0);" method="POST" onsubmit="sendMessage()">
-            <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
             <input id="messageText" name="messageText" type="text" placeholder="Message...">
             <input type="submit" value="Send">
         </form>
-</div>
+    </div>
 </div>
 
 
@@ -30,22 +35,12 @@
     var connection = new signalR.HubConnectionBuilder().withUrl('/lotPageHub').build();
 
     connection.on('RefreshChatMessages', function () {
-        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
-
-        fetch(auctionNumber + '/GetMessages', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => showMessages(data))
-            .function(error => console.error('Unable to fetch messages.', error));
+        refreshMessages();
     });
 
     connection.on('RefreshCurrentPrice', function () {
-
+        refreshCurrentPrice();
+        refreshMessages();
     });
 
     connection
@@ -59,6 +54,26 @@
         .catch(function (err) {
             return console.error(err.toString());
         });
+
+
+    function refreshCurrentPrice() {
+        // TODO: Update
+    }
+
+    function refreshMessages() {
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/GetMessages', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => showMessages(data))
+            .function(error => console.error('Unable to fetch messages', error));
+    }
 
     function showMessages(messages) {
         var chat = document.getElementById('chat');
@@ -91,5 +106,23 @@
             })
         })
             .then(document.getElementById('messageText').value = '');
+    }
+
+    function placeBet() {
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/PlaceBet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({
+                    AuctionNumber: auctionNumber,
+                    BidSum: document.getElementById('bidSum').value
+                })
+            })
+            .then(document.getElementById('bidSum').value = '');
     }
 </script>

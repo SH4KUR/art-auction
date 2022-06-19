@@ -11,14 +11,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace ArtAuction.Core.Application.Handlers
 {
-    public class PlaceBidCommandHandler : IRequestHandler<PlaceBidCommand, Unit>
+    public class PlaceBetCommandHandler : IRequestHandler<PlaceBetCommand, Unit>
     {
         private readonly IAuctionRepository _auctionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IConfiguration _configuration;
 
-        public PlaceBidCommandHandler(IAuctionRepository auctionRepository, IUserRepository userRepository, IAccountRepository accountRepository, IConfiguration configuration)
+        public PlaceBetCommandHandler(IAuctionRepository auctionRepository, IUserRepository userRepository, IAccountRepository accountRepository, IConfiguration configuration)
         {
             _auctionRepository = auctionRepository;
             _userRepository = userRepository;
@@ -26,7 +26,7 @@ namespace ArtAuction.Core.Application.Handlers
             _configuration = configuration;
         }
 
-        public async Task<Unit> Handle(PlaceBidCommand request, CancellationToken cancellationToken)    // TODO: Refactor with SRP
+        public async Task<Unit> Handle(PlaceBetCommand request, CancellationToken cancellationToken)    // TODO: Refactor with SRP
         {
             var bidDateTime = DateTime.Now;
             var auction = await _auctionRepository.GetAuctionAsync(request.AuctionNumber);

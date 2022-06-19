@@ -56,10 +56,10 @@ namespace ArtAuction.WebUI.Controllers
             await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshChatMessages");
         }
 
-        [HttpPost("{auctionNumber}/PlaceBid")]
-        public async Task PlaceBid([FromBody] PlaceBidModel model)
+        [HttpPost("{auctionNumber}/PlaceBet")]
+        public async Task PlaceBet([FromBody] PlaceBetModel model)
         {
-            await _mediator.Send(new PlaceBidCommand
+            await _mediator.Send(new PlaceBetCommand
             {
                 UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value,
                 AuctionNumber = model.AuctionNumber,
@@ -83,7 +83,7 @@ namespace ArtAuction.WebUI.Controllers
         public string MessageText { get; set; }
     }
 
-    public class PlaceBidModel
+    public class PlaceBetModel
     {
         public int AuctionNumber { get; set; }
         public decimal BidSum { get; set; }
