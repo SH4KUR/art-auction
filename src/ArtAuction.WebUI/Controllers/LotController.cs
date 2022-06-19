@@ -63,7 +63,7 @@ namespace ArtAuction.WebUI.Controllers
             {
                 UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value,
                 AuctionNumber = model.AuctionNumber,
-                Sum= model.BidSum
+                Sum = model.BidSum
             });
 
             await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
