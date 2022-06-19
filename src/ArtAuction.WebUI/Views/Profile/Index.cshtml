@@ -1,4 +1,5 @@
-﻿@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
+﻿@using ArtAuction.Core.Domain.Enums
+@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
 
 @{
     ViewData["Title"] = "Profile";
@@ -7,4 +8,12 @@
 <div class="text-center">
     <h1 class="display-4">Profile @Model.Login</h1>
     <h4>Balance: @Model.AccountBalance $</h4>
+
+    @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
+    {
+        <a asp-controller="Profile" asp-action="BuyVipStatus" class="btn btn-lg btn-primary">
+            Buy VIP on @(ViewData["VipStatusDaysCount"]) days (@(ViewBag["VipStatusCost"])$
+        </a>
+    }
+
 </div>

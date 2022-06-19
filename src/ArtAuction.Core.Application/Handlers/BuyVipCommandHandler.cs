@@ -10,20 +10,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace ArtAuction.Core.Application.Handlers
 {
-    public class CreateVipCommandHandler : IRequestHandler<CreateVipCommand, Unit>
+    public class BuyVipCommandHandler : IRequestHandler<BuyVipCommand, Unit>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
-        public CreateVipCommandHandler(IAccountRepository accountRepository, IUserRepository userRepository, IConfiguration configuration)
+        public BuyVipCommandHandler(IAccountRepository accountRepository, IUserRepository userRepository, IConfiguration configuration)
         {
             _accountRepository = accountRepository;
             _userRepository = userRepository;
             _configuration = configuration;
         }
 
-        public async Task<Unit> Handle(CreateVipCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(BuyVipCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserAsync(request.UserLogin);
 
@@ -33,40 +33,36 @@ namespace ArtAuction.Core.Application.Handlers
                 return Unit.Value;  // TODO: throw custom exception
             }
 
-            var vipCost = Convert.ToDecimal(_configuration["App:VipCost"]);
+            var vipCost = Convert.ToDecimal(_configuration["App:VipStatusCost"]);
             if (account.Sum < vipCost)
             {
                 return Unit.Value;  // TODO: throw custom exception
             }
-
-            var operationGuid = Guid.NewGuid();     // TODO: refactor for transaction
-            var sumAfter = account.Sum - vipCost;
-            var dateTimeNow = DateTime.Now;
             
-            await _accountRepository.AddOperation(new Operation
+            var operation = new Operation
             {
-                OperationId = operationGuid,
+                OperationId = Guid.NewGuid(),
                 AccountId = account.AccountId,
                 OperationType = OperationType.Withdraw,
-                DateTime = dateTimeNow,
-                Description = $"Purchase of VIP status from {dateTimeNow.ToShortDateString()}",
+                DateTime = DateTime.Now,
+                Description = "Purchase of VIP status.",
                 SumBefore = account.Sum,
                 SumOperation = vipCost,
-                SumAfter = sumAfter
-            });
+                SumAfter = account.Sum - vipCost
+            };
+            await _accountRepository.AddOperation(operation);
             
             await _accountRepository.AddVip(new Vip
             {
                 VipId = Guid.NewGuid(),
-                OperationId = operationGuid,
+                OperationId = operation.OperationId,
                 UserId = user.UserId,
-                DateFrom = dateTimeNow,
-                DateUntil = dateTimeNow.AddDays(Convert.ToInt32(_configuration["App:VipDaysCount"]))
+                DateFrom = operation.DateTime,
+                DateUntil = operation.DateTime.AddDays(Convert.ToInt32(_configuration["App:VipStatusDaysCount"]))
             });
 
-            account.LastUpdate = dateTimeNow;
-            account.Sum = sumAfter;
-            
+            account.LastUpdate = operation.DateTime;
+            account.Sum = operation.SumAfter;
             await _accountRepository.UpdateAccount(account);
 
             user.IsVip = true;

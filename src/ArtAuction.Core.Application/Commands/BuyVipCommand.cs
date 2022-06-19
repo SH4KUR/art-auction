@@ -2,7 +2,7 @@
 
 namespace ArtAuction.Core.Application.Commands
 {
-    public class CreateVipCommand : IRequest
+    public class BuyVipCommand : IRequest
     {
         public string UserLogin { get; set; }
     }
