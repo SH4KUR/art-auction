@@ -20,6 +20,7 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
                 .WithColumn("current_price").AsDecimal().NotNullable()
                 .WithColumn("full_price").AsDecimal().Nullable().WithDefaultValue(null)
                 .WithColumn("bid_step").AsDecimal().NotNullable()
+                .WithColumn("is_vip").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("is_closed").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("customer_id").AsGuid().Nullable().WithDefaultValue(null);
 

@@ -19,6 +19,7 @@ namespace ArtAuction.Core.Domain.Entities
         public decimal BidStep { get; set; }
         public IEnumerable<Bid> Bids { get; set; }
         public IEnumerable<Message> Messages { get; set; }
+        public bool IsVip { get; set; }
         public bool IsClosed { get; set; }
         public Guid? CustomerId { get; set; }
     }

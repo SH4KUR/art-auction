@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ArtAuction.WebUI.Models.AuctionCatalog;
 
 namespace ArtAuction.WebUI.Models.Lot

@@ -39,6 +39,7 @@ namespace ArtAuction.Core.Application.Handlers
             {
                 AuctionNumber = auction.AuctionNumber,
                 IsClosed = auction.IsClosed,
+                IsVip = auction.IsVip,
 
                 CreationDateTime = auction.CreationDateTime,
                 StartBillingDateTime = auction.StartBillingDateTime,

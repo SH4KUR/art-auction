@@ -37,6 +37,8 @@ namespace ArtAuction.Core.Application.Handlers
                 FullPrice = request.FullPrice,
                 BidStep = request.BidStep,
                 
+                IsVip = sellerUser.IsVip,
+                
                 CreationDateTime = DateTime.Now,
                 StartBillingDateTime = request.StartBillingDate,
                 EndBillingDateTime = request.EndBillingDate,

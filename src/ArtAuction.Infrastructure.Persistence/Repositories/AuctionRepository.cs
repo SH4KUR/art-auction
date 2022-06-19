@@ -40,6 +40,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[current_price] AS CurrentPrice
                     ,[full_price] AS FullPrice
                     ,[bid_step] AS BidStep
+                    ,[is_vip] AS IsVip
                     ,[is_closed] AS IsClosed
                     ,[customer_id] AS CustomerId
                 FROM [dbo].[auction]
@@ -108,6 +109,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[current_price] AS CurrentPrice
                     ,[full_price] AS FullPrice
                     ,[bid_step] AS BidStep
+                    ,[is_vip] AS IsVip
                     ,[is_closed] AS IsClosed
                     ,[customer_id] AS CustomerId
                 FROM [dbo].[auction] AS a 
@@ -314,6 +316,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[current_price]
                     ,[full_price]
                     ,[bid_step]
+                    ,[is_vip]
                     ,[is_closed]
                     ,[customer_id]
                 )
@@ -328,7 +331,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
 	                ,@CurrentPrice
 	                ,@FullPrice
 	                ,@BidStep
-	                ,0
+	                ,@IsVip
+                    ,0
                     ,NULL
                 )";
 
@@ -355,7 +359,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                             auction.StartPrice,
                             auction.CurrentPrice,
                             auction.FullPrice,
-                            auction.BidStep
+                            auction.BidStep,
+                            auction.IsVip
                         }, transaction);
 
                         await transaction.CommitAsync();

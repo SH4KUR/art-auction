@@ -6,6 +6,7 @@ namespace ArtAuction.WebUI.Models.AuctionCatalog
     {
         public int AuctionNumber { get; set; }
         public bool IsClosed { get; set; }
+        public bool IsVip { get; set; }
 
         public DateTime CreationDateTime { get; set; }
         public DateTime StartBillingDateTime { get; set; }
