@@ -11,6 +11,9 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
         Task AddUserAsync(User user);
         void UpdateUser(User user);
 
+        Task AddComplaintAsync(Complaint complaint);
+        Task AddReviewAsync(Review review);
+
         Task<bool> IsUserAlreadyRegisteredAsync(string login, string email);
     }
 }

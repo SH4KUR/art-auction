@@ -214,6 +214,59 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             });
         }
 
+        public async Task AddComplaintAsync(Complaint complaint)
+        {
+            var query = @"
+                INSERT INTO [dbo].[complaint] (
+                     [user_id_from]
+                    ,[user_id_on]
+                    ,[date_time]
+                    ,[description]
+                    ,[is_processed])
+                VALUES (
+                    ,@UserIdFrom
+                    ,@UserIdOn
+                    ,GETDATE()
+                    ,@Description
+                    ,0
+                )";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
+            {
+                complaint.UserIdFrom,
+                complaint.UserIdOn,
+                complaint.Description
+            });
+        }
+
+        public async Task AddReviewAsync(Review review)
+        {
+            var query = @"
+                INSERT INTO [dbo].[review] (
+                     [user_id_from]
+                    ,[user_id_on]
+                    ,[date_time]
+                    ,[rate]
+                    ,[description])
+                VALUES (
+                    ,@UserIdFrom
+                    ,@UserIdOn
+                    ,GETDATE()
+                    ,@Rate
+                    ,@Description
+                )";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            await connection.ExecuteAsync(query, new
+            {
+                review.UserIdFrom,
+                review.UserIdOn,
+                review.Rate,
+                review.Description
+            });
+        }
+
         public async Task<bool> IsUserAlreadyRegisteredAsync(string login, string email)
         {
             var query = @"
