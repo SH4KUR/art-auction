@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Models;
 using ArtAuction.Core.Domain.Entities;
@@ -13,6 +14,9 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
             decimal? maxCurrentPrice, int pageNumber = 1, int rowsOnPage = 10, bool isClosed = false);
         Task AddAuctionAsync(Auction auction);
         Task UpdateAuctionAsync(Auction auction);
+
+        Task<IEnumerable<Auction>> GetCustomerAuctionsAsync(Guid customerId);
+        Task<IEnumerable<Auction>> GetSellerAuctionsAsync(Guid sellerId);
 
         Task AddBidAsync(Bid bid);
         Task AddMessageAsync(Message message);

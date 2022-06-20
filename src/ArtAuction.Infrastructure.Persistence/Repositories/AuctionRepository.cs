@@ -395,6 +395,102 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             });
         }
 
+        public async Task<IEnumerable<Auction>> GetCustomerAuctionsAsync(Guid customerId)
+        {
+            var query = $@"
+                SELECT 
+	                 [auction_id] AS AuctionId
+	                ,[auction_number] AS AuctionNumber
+                    ,[lot_id] AS LotId
+                    ,[seller_id] AS SellerId
+                    ,[creation_datetime] AS CreationDateTime
+                    ,[start_billing_datetime] AS StartBillingDateTime
+                    ,[end_billing_datetime] AS EndBillingDateTime
+                    ,[start_price] AS StartPrice
+                    ,[current_price] AS CurrentPrice
+                    ,[full_price] AS FullPrice
+                    ,[bid_step] AS BidStep
+                    ,[is_vip] AS IsVip
+                    ,[is_closed] AS IsClosed
+                    ,[customer_id] AS CustomerId
+                FROM [dbo].[auction]
+                WHERE 
+                    [customer_id] = '{customerId}'
+                ORDER BY [end_billing_datetime] DESC";
+
+            IEnumerable<Auction> auctions;
+            await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
+            {
+                await connection.OpenAsync();
+                await using (var transaction = await connection.BeginTransactionAsync())
+                {
+                    auctions = (await connection.QueryAsync<Auction>(query, transaction: transaction)).ToArray();
+                    
+                    if (auctions.Any())
+                    {
+                        foreach (var auction in auctions)
+                        {
+                            auction.Lot = await GetLot(auction.LotId, connection, transaction);
+                            auction.Bids = await GetBids(auction.AuctionId, connection, transaction);
+                            auction.Messages = await GetMessages(auction.AuctionId, connection, transaction);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+            }
+
+            return auctions;
+        }
+
+        public async Task<IEnumerable<Auction>> GetSellerAuctionsAsync(Guid sellerId)
+        {
+            var query = $@"
+                SELECT 
+	                 [auction_id] AS AuctionId
+	                ,[auction_number] AS AuctionNumber
+                    ,[lot_id] AS LotId
+                    ,[seller_id] AS SellerId
+                    ,[creation_datetime] AS CreationDateTime
+                    ,[start_billing_datetime] AS StartBillingDateTime
+                    ,[end_billing_datetime] AS EndBillingDateTime
+                    ,[start_price] AS StartPrice
+                    ,[current_price] AS CurrentPrice
+                    ,[full_price] AS FullPrice
+                    ,[bid_step] AS BidStep
+                    ,[is_vip] AS IsVip
+                    ,[is_closed] AS IsClosed
+                    ,[customer_id] AS CustomerId
+                FROM [dbo].[auction]
+                WHERE 
+                    [seller_id] = '{sellerId}'
+                ORDER BY [end_billing_datetime] DESC";
+
+            IEnumerable<Auction> auctions;
+            await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
+            {
+                await connection.OpenAsync();
+                await using (var transaction = await connection.BeginTransactionAsync())
+                {
+                    auctions = (await connection.QueryAsync<Auction>(query, transaction: transaction)).ToArray();
+
+                    if (auctions.Any())
+                    {
+                        foreach (var auction in auctions)
+                        {
+                            auction.Lot = await GetLot(auction.LotId, connection, transaction);
+                            auction.Bids = await GetBids(auction.AuctionId, connection, transaction);
+                            auction.Messages = await GetMessages(auction.AuctionId, connection, transaction);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+            }
+
+            return auctions;
+        }
+
         public async Task AddBidAsync(Bid bid)
         {
             var query = @"

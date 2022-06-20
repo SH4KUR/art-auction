@@ -61,7 +61,7 @@ namespace ArtAuction.Core.Application.Handlers
                 BidsCount = auction.Bids.Count(),
                     
                 SellerLogin = _userRepository.GetUser(auction.SellerId).Login,
-                CustomerLogin = (auction.CustomerId == null) ? string.Empty : _userRepository.GetUser(auction.CustomerId.Value).Login,
+                CustomerLogin = (auction.CustomerId == null) ? null : _userRepository.GetUser(auction.CustomerId.Value).Login,
                     
                 CategoryName = auction.Lot.Category.Name,
                 LotName = auction.Lot.Name,
