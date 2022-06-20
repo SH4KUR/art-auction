@@ -9,6 +9,7 @@ namespace ArtAuction.Core.Application
         public ApplicationLayerMappingProfile()
         {
             CreateMap<User, UserDto>();
+            CreateMap<Operation, OperationDto>();
         }
     }
 }   
