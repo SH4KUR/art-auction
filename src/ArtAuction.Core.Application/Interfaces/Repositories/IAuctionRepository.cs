@@ -22,5 +22,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
         Task AddMessageAsync(Message message);
 
         Task<IEnumerable<Category>> GetCategories();
+        
+        Task<IEnumerable<string>> GetAuctionsToCloseAsync();
     }
 }

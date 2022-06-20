@@ -564,5 +564,18 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.QueryAsync<Category>(query);
         }
+
+        public async Task<IEnumerable<string>> GetAuctionsToCloseAsync()
+        {
+            var query = @"
+                SELECT
+                     [auction_number]
+                FROM [dbo].[auction]
+                WHERE 
+                    [end_billing_datetime] <= GETDATE()";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryAsync<string>(query);
+        }
     }
 }
