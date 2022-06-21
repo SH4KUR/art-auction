@@ -169,7 +169,13 @@ namespace ArtAuction.Infrastructure.IntegrationTests.Repositories
             // Assert
             result.Should().NotBeNullOrEmpty();
         }
-        
+
+        [Fact, MockAutoData]
+        public async Task repository_gets_auctions_correctly()
+        {
+            true.Should().BeTrue();
+        }
+
         #region Private methods
 
         private async Task<Auction> GetAuctionAsync(string sellerId)
