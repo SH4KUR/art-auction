@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
+using ArtAuction.Core.Domain.Enums;
 using ArtAuction.WebUI.Models.Profile;
 using AutoMapper;
 using MediatR;
@@ -47,21 +48,6 @@ namespace ArtAuction.WebUI.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> BuyVipStatus()
-        {
-            // TODO: Redirect if there isn't enough money to buy a VIP
-            await _mediator.Send(new BuyVipCommand {UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value});
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ReplenishPersonalAccount(decimal replenishmentAmount)
-        {
-            ViewData["StripePublicKey"] = _configuration["StripeAPI:PublicKey"];
-
-            return View("ReplenishPersonalAccount", replenishmentAmount);
-        }
-
         [HttpPost("CreatePaymentIntent")]
         public JsonResult CreatePaymentIntent([FromBody] PaymentIntentCreateRequest model)
         {
@@ -77,6 +63,40 @@ namespace ArtAuction.WebUI.Controllers
             });
 
             return Json(new { clientSecret = paymentIntent.ClientSecret });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReplenishPersonalAccount(decimal replenishmentAmount)
+        {
+            ViewData["StripePublicKey"] = _configuration["StripeAPI:PublicKey"];
+
+            return View("ReplenishPersonalAccount", replenishmentAmount);
+        }
+
+        [Route("[controller]/ReplenishmentConfirm/{sum}")]
+        public async Task<IActionResult> ReplenishmentConfirm(decimal sum)
+        {
+            await _mediator.Send(new CreateOperationCommand
+            {
+                UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value,
+                OperationType = OperationType.Replenishment,
+                Sum = sum,
+                Description = $"Account Replenishment: {sum}"
+            });
+
+            return RedirectToAction("ReplenishmentSuccessful");
+        }
+        
+        public IActionResult ReplenishmentSuccessful()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> BuyVipStatus()
+        {
+            // TODO: Redirect if there isn't enough money to buy a VIP
+            await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
+            return RedirectToAction("Index");
         }
         
         public IActionResult BuyVipByCard()

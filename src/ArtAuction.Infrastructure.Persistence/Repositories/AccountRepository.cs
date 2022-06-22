@@ -156,6 +156,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                      [operation_id]
 	                ,[account_id]
                     ,[date_time]
+                    ,[operation_type]
                     ,[sum_before]
                     ,[sum_operation]
                     ,[sum_after]
@@ -165,6 +166,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                      @OperationId
 	                ,@AccountId
                     ,@DateTime
+                    ,@OperationType
                     ,@SumBefore
                     ,@SumOperation
                     ,@SumAfter
@@ -188,12 +190,13 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                         {
                             operation.OperationId,
                             operation.AccountId,
+                            operation.OperationType,
                             operation.DateTime,
                             operation.SumBefore,
                             operation.SumOperation,
                             operation.SumAfter,
                             operation.Description
-                        });
+                        }, transaction);
                         await transaction.CommitAsync();
                     }
                     catch (Exception)

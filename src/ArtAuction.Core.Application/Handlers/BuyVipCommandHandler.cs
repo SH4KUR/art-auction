@@ -60,11 +60,7 @@ namespace ArtAuction.Core.Application.Handlers
                 DateFrom = operation.DateTime,
                 DateUntil = operation.DateTime.AddDays(Convert.ToInt32(_configuration["App:VipStatusDaysCount"]))
             });
-
-            account.LastUpdate = operation.DateTime;
-            account.Sum = operation.SumAfter;
-            await _accountRepository.UpdateAccount(account);
-
+            
             user.IsVip = true;
             _userRepository.UpdateUser(user);
             

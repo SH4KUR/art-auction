@@ -12,15 +12,23 @@ namespace ArtAuction.Core.Application.Handlers
     public class CreateOperationCommandHandler : IRequestHandler<CreateOperationCommand, Unit>
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CreateOperationCommandHandler(IAccountRepository accountRepository)
+        public CreateOperationCommandHandler(IAccountRepository accountRepository, IUserRepository userRepository)
         {
             _accountRepository = accountRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<Unit> Handle(CreateOperationCommand request, CancellationToken cancellationToken)
         {
-            var account = await _accountRepository.GetAccount(request.UserId);
+            var user = await _userRepository.GetUserAsync(request.UserLogin);
+            if (user == null)
+            {
+                return Unit.Value;  // TODO: throw custom exception
+            }
+            
+            var account = await _accountRepository.GetAccount(user.UserId);
             if (account == null)
             {
                 return Unit.Value;  // TODO: throw custom exception
@@ -52,12 +60,7 @@ namespace ArtAuction.Core.Application.Handlers
             }
 
             await _accountRepository.AddOperation(operation);
-
-            account.LastUpdate = operation.DateTime;
-            account.Sum = operation.SumAfter;
             
-            await _accountRepository.UpdateAccount(account);
-
             return Unit.Value;
         }
     }
