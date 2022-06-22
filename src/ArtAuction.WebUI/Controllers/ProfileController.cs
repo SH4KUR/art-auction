@@ -49,5 +49,12 @@ namespace ArtAuction.WebUI.Controllers
             await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ReplenishPersonalAccount(decimal replenishmentAmount)
+        {
+            
+            return RedirectToAction("Index");
+        }
     }
 }
