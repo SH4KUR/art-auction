@@ -219,7 +219,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     ,[date_until]
                 )
                 VALUES (
-	                ,@VipId
+	                 @VipId
 	                ,@OperationId
 	                ,@UserId
 	                ,@DateFrom
