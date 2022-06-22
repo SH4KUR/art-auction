@@ -8,7 +8,7 @@
 <div class="text-center">
     <h1 class="display-4">Profile @Model.Login</h1>
     <h4>Balance: @Model.AccountBalance $</h4>
-    
+
     <form asp-controller="Profile" asp-action="ReplenishPersonalAccount">
         <div class="form-group">
             <input id="replenishmentAmount" name="replenishmentAmount" class="form-control" />
@@ -17,12 +17,15 @@
             <input type="submit" value="Replenish" class="btn btn-lg btn-primary btn-block" />
         </div>
     </form>
-    
-    
+
+
     @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
     {
         <a asp-controller="Profile" asp-action="BuyVipStatus" class="btn btn-lg btn-primary">
             Buy VIP on @(ViewData["VipStatusDaysCount"]) days (@(ViewData["VipStatusCost"])$)
+        </a>
+        <a asp-controller="Profile" asp-action="BuyVipByCard" class="btn btn-lg btn-primary">
+            Buy VIP by Card
         </a>
     }
 

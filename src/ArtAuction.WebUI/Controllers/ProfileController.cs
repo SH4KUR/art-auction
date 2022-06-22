@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
@@ -8,6 +9,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Stripe;
+using Stripe.Checkout;
 
 namespace ArtAuction.WebUI.Controllers
 {
@@ -17,7 +21,7 @@ namespace ArtAuction.WebUI.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        
+
         public ProfileController(IMediator mediator, IMapper mapper, IConfiguration configuration)
         {
             _mediator = mediator;
@@ -31,7 +35,7 @@ namespace ArtAuction.WebUI.Controllers
             var userLogin = User?.FindFirst(ClaimTypes.Name)?.Value;
             if (userLogin == null)
             {
-                RedirectToAction("Index", "Home");  // TODO: Throw
+                RedirectToAction("Index", "Home"); // TODO: Throw
             }
 
             var model = _mapper.Map<UserProfileViewModel>(await _mediator.Send(new GetUserCommand(userLogin)));
@@ -42,19 +46,66 @@ namespace ArtAuction.WebUI.Controllers
 
             return View(model);
         }
-        
+
         public async Task<IActionResult> BuyVipStatus()
         {
             // TODO: Redirect if there isn't enough money to buy a VIP
-            await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
+            await _mediator.Send(new BuyVipCommand {UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value});
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> ReplenishPersonalAccount(decimal replenishmentAmount)
         {
-            
-            return RedirectToAction("Index");
+            ViewData["StripePublicKey"] = _configuration["StripeAPI:PublicKey"];
+
+            return View("ReplenishPersonalAccount", replenishmentAmount);
         }
+
+        [HttpPost("CreatePaymentIntent")]
+        public JsonResult CreatePaymentIntent([FromBody] PaymentIntentCreateRequest model)
+        {
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
+            {
+                Amount = (long?)model.ReplenishmentAmount,
+                Currency = "usd",
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                {
+                    Enabled = true,
+                }
+            });
+
+            return Json(new { clientSecret = paymentIntent.ClientSecret });
+        }
+        
+        public IActionResult BuyVipByCard()
+        {
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new()
+                    {
+                        Price = _configuration["StripeAPI:VipPriceId"],
+                        Quantity = 1,
+                    },
+                },
+                Mode = "payment",
+                SuccessUrl = "https://localhost:44302/Profile",
+                CancelUrl = "https://localhost:44302/Profile",
+            };
+            
+            var session = new SessionService().Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+    }
+
+    public class PaymentIntentCreateRequest
+    {
+        [JsonProperty("replenishmentAmount")]
+        public decimal ReplenishmentAmount { get; set; }
     }
 }

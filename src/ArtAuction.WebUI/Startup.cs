@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Stripe;
 
 namespace ArtAuction.WebUI
 {
@@ -75,6 +76,8 @@ namespace ArtAuction.WebUI
                 
                 endpoints.MapHub<LotPageHub>("/lotPageHub");
             });
+
+            StripeConfiguration.ApiKey = Configuration["StripeAPI:SecretKey"];
             
             // uncomment this block of code with the first run to create and seed the database
             DatabaseEnsure.Run(Configuration);
