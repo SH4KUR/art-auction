@@ -66,7 +66,7 @@ namespace ArtAuction.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ReplenishPersonalAccount(decimal replenishmentAmount)
+        public IActionResult ReplenishPersonalAccount(decimal replenishmentAmount)
         {
             ViewData["StripePublicKey"] = _configuration["StripeAPI:PublicKey"];
 
@@ -91,13 +91,6 @@ namespace ArtAuction.WebUI.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> BuyVipStatus()
-        {
-            // TODO: Redirect if there isn't enough money to buy a VIP
-            await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
-            return RedirectToAction("Index");
-        }
         
         public IActionResult BuyVipByCard()
         {
@@ -112,7 +105,7 @@ namespace ArtAuction.WebUI.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:44302/Profile",
+                SuccessUrl = "https://localhost:44302/Profile/BuyVipStatus",
                 CancelUrl = "https://localhost:44302/Profile",
             };
             
@@ -120,6 +113,18 @@ namespace ArtAuction.WebUI.Controllers
 
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
+        }
+
+        [Route("[controller]/BuyVipStatus")]
+        public async Task<IActionResult> BuyVipStatus()
+        {
+            await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
+            return RedirectToAction("BuyVipSuccessful");
+        }
+
+        public IActionResult BuyVipSuccessful()
+        {
+            return View();
         }
     }
 
