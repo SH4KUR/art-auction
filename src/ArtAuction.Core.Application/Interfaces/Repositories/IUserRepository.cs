@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ArtAuction.Core.Domain.Entities;
 
@@ -8,6 +9,7 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     {
         Task<User> GetUserAsync(string login);
         User GetUser(Guid userId);
+        Task<IEnumerable<Review>> GetUserReviews(string login);
         Task AddUserAsync(User user);
         void UpdateUser(User user);
 

@@ -17,7 +17,7 @@ namespace ArtAuction.WebUI
             CreateMap<AuctionCatalogDto, AuctionViewModel>();
             CreateMap<BidDto, BidViewModel>();
             CreateMap<MessageDto, MessageViewModel>();
-            CreateMap<UserDto, UserProfileViewModel>();
+            CreateMap<UserDto, UserViewModel>();
         }
     }
 }

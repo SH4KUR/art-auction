@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
+using ArtAuction.WebUI.Models.AuctionCatalog;
 using ArtAuction.WebUI.Models.Profile;
 using AutoMapper;
 using MediatR;
@@ -11,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace ArtAuction.WebUI.Controllers
 {
-    [Authorize]
     public class ProfileController : Controller
     {
         private readonly IMediator _mediator;
@@ -26,6 +27,7 @@ namespace ArtAuction.WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var userLogin = User?.FindFirst(ClaimTypes.Name)?.Value;
@@ -34,13 +36,27 @@ namespace ArtAuction.WebUI.Controllers
                 RedirectToAction("Index", "Home"); // TODO: Throw
             }
 
-            var model = _mapper.Map<UserProfileViewModel>(await _mediator.Send(new GetUserCommand(userLogin)));
-            model.AccountBalance = await _mediator.Send(new GetCurrentAccountBalanceCommand(userLogin));
-
+            var model = _mapper.Map<UserViewModel>(await _mediator.Send(new GetUserCommand(userLogin)));
+            
+            ViewData["AccountBalance"] = await _mediator.Send(new GetCurrentAccountBalanceCommand(userLogin));
             ViewData["VipStatusCost"] = Convert.ToDecimal(_configuration["App:VipStatusCost"]);
             ViewData["VipStatusDaysCount"] = Convert.ToInt32(_configuration["App:VipStatusDaysCount"]);
 
             return View(model);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetUserProfile(string userLogin)
+        {
+            var userAuctions = await _mediator.Send(new GetUserAuctionsCommand(userLogin));
+            
+            var model = new UserProfileViewModel
+            {
+                User = _mapper.Map<UserViewModel>(await _mediator.Send(new GetUserCommand(userLogin))),
+                Auctions = userAuctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
+            };
+
+            return View("UserProfile", model);
         }
     }
 }

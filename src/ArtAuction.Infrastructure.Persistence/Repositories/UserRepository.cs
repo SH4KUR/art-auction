@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Interfaces.Repositories;
 using ArtAuction.Core.Domain.Entities;
@@ -68,6 +69,28 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             return connection.QueryFirstOrDefault<User>(query, new
             {
                 UserId = userId
+            });
+        }
+
+        public async Task<IEnumerable<Review>> GetUserReviews(string login)
+        {
+            var query = @"
+                SELECT 
+                     r.[review_id] AS ReviewId
+                    ,r.[user_id_from] AS UserIdFrom
+                    ,r.[user_id_on] AS UserIdOn
+                    ,r.[date_time] AS DateTime
+                    ,r.[rate]
+                    ,r.[description]
+                FROM [dbo].[review] AS r INNER JOIN [dbo].[user] AS u
+                    ON r.[user_id_on] = u.[user_id]
+                WHERE 
+                    u.[login] = @UserLogin";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryAsync<Review>(query, new
+            {
+                UserLogin = login
             });
         }
 

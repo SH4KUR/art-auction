@@ -1,5 +1,5 @@
 ﻿@using ArtAuction.Core.Domain.Enums
-@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
+@model ArtAuction.WebUI.Models.Profile.UserViewModel
 
 @{
     ViewData["Title"] = "Profile";
@@ -7,7 +7,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Profile @Model.Login</h1>
-    <h4>Balance: @Model.AccountBalance $</h4>
+    <h4>Balance: @ViewData["AccountBalance"] $</h4>
 
     <form asp-controller="Payment" asp-action="ReplenishPersonalAccount">
         <div class="form-group">

@@ -1,9 +1,9 @@
 ﻿using System;
 using ArtAuction.Core.Domain.Enums;
 
-namespace ArtAuction.Core.Application.DTO
+namespace ArtAuction.WebUI.Models.Profile
 {
-    public class UserDto
+    public class UserViewModel
     {
         public string Login { get; set; }
         public string Email { get; set; }
@@ -15,7 +15,6 @@ namespace ArtAuction.Core.Application.DTO
         public string Address { get; set; }
         public bool IsVip { get; set; }
         public bool IsBlocked { get; set; }
-
         public decimal AvgRate { get; set; }
     }
 }

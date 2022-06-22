@@ -7,6 +7,10 @@
             <a class="btn btn-outline-secondary" asp-action="Index" asp-controller="Lot" asp-route-auctionNumber="@auction.AuctionNumber">
                 @auction.AuctionNumber
             </a>
+
+            <a class="btn btn-outline-secondary" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@auction.SellerLogin">
+                @auction.SellerLogin
+            </a>
         </div>
     }
 </div>

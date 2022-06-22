@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.Core.Application.DTO;
@@ -22,7 +23,12 @@ namespace ArtAuction.Core.Application.Handlers
         public async Task<UserDto> Handle(GetUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserAsync(request.UserLogin);
-            return _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            var reviews = (await _userRepository.GetUserReviews(request.UserLogin)).ToArray();
+            userDto.AvgRate = reviews.Any() ? (decimal) reviews.Average(r => r.Rate) : decimal.Zero;
+
+            return userDto;
         }
     }
 }
