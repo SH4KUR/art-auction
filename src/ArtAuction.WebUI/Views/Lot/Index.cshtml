@@ -19,6 +19,13 @@
             <input id="bidSum" name="bidSum" type="number" min="@Model.AuctionLot.CurrentPrice" step="@Model.AuctionLot.BidStep">
             <input type="submit" value="Place a Bet">
         </form>
+        
+        @if (Model.AuctionLot.FullPrice != null)
+        {
+            <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
+                <input type="submit" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+            </form>
+        }
 
         <form action="javascript:void(0);" method="POST" onsubmit="sendMessage()">
             <input id="messageText" name="messageText" type="text" placeholder="Message...">
@@ -124,5 +131,19 @@
             })
         })
         .then(document.getElementById('bidSum').value = '');
+    }
+
+    function buyFullPrice() {
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/BuyFullPrice', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json; charset=UTF-8',
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({ auctionNumber: auctionNumber })
+            });
     }
 </script>
