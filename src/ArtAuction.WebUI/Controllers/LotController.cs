@@ -85,7 +85,7 @@ namespace ArtAuction.WebUI.Controllers
         public async Task<JsonResult> GetMessages(int auctionNumber)
         {
             var messages = await _mediator.Send(new GetAuctionMessagesCommand { AuctionNumber = auctionNumber });
-            return Json(messages.OrderBy(m => m.DateTime));
+            return Json(messages.OrderByDescending(m => m.DateTime));
         }
     }
 

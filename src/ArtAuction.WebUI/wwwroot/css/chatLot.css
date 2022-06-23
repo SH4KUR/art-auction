@@ -1,0 +1,44 @@
+﻿#chat {
+    margin-top: 10px;
+    padding-top: 50px;
+}
+
+#chatMessageList {
+    padding: 40px 0 114px;
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+    height: 350px;
+    border: 1px dimgrey solid;
+    border-radius: 4px;
+    padding: 10px 10px 10px 10px;
+    background: #dddddd
+}
+
+.chat-log__item {
+    background: #fafafa;
+    padding: 10px;
+    margin: 0 auto 20px;
+    max-width: 80%;
+    float: left;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    clear: both;
+}
+
+.chat-log__item.chat-log__item--own {
+    float: right;
+    background: #DCF8C6;
+    text-align: right;
+}
+
+.chat-form {
+    padding: 40px 0;
+    width: 100%;
+}
+
+.chat-log__author {
+    margin: 0 auto .5em;
+    font-size: 14px;
+    font-weight: bold;
+}

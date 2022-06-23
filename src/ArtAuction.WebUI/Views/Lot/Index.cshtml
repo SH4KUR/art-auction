@@ -1,4 +1,5 @@
-﻿@model ArtAuction.WebUI.Models.Lot.AuctionLotViewModel
+﻿@using System.Security.Claims
+@model ArtAuction.WebUI.Models.Lot.AuctionLotViewModel
 
 @{
     ViewData["Title"] = "Lot";
@@ -9,11 +10,7 @@
     <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
 
     <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.AuctionLot.Image)" alt="@Model.AuctionLot.LotName Photo" />
-
-    <div>
-        <ul id="chat">
-        </ul>
-    </div>
+    
     <div>
         <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
             <input id="bidSum" name="bidSum" type="number" min="@Model.AuctionLot.CurrentPrice" step="@Model.AuctionLot.BidStep">
@@ -26,12 +23,9 @@
                 <input type="submit" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
             </form>
         }
-
-        <form action="javascript:void(0);" method="POST" onsubmit="sendMessage()">
-            <input id="messageText" name="messageText" type="text" placeholder="Message...">
-            <input type="submit" value="Send">
-        </form>
     </div>
+    
+    <partial name="Lot/_LotChatPartial"/>
 </div>
 
 
@@ -83,16 +77,35 @@
     }
 
     function showMessages(messages) {
-        var chat = document.getElementById('chat');
+        var chat = document.getElementById('chatMessageList');
 
         while (chat.firstChild) {       // TODO: Refactor for adding only last message
             chat.removeChild(chat.firstChild);
         }
 
         messages.forEach(message => {
-            var messageElem = document.createElement('li');
-            messageElem.textContent = '[' + message.dateTime + ']' + message.userLogin + ' - ' + message.messageText;
+            var login = '@(User?.FindFirst(ClaimTypes.Name)?.Value ?? "")';
 
+            var messageElem = document.createElement('div');
+            messageElem.className = 'chat-log__item';
+
+            if (message.userLogin == login) {
+                messageElem.className += ' chat-log__item--own';
+            }
+
+            var messageHeader = document.createElement('h3');
+            messageHeader.className = 'chat-log__author';
+            messageHeader.textContent = message.userLogin;
+
+            var messageTime = document.createElement('small');
+            messageTime.textContent = message.dateTime;
+            messageHeader.appendChild(messageTime);
+
+            var messageTextElem = document.createElement('div');
+            messageTextElem.textContent = message.messageText;
+
+            messageElem.appendChild(messageHeader);
+            messageElem.appendChild(messageTextElem);
             chat.appendChild(messageElem);
         });
     }
