@@ -5,27 +5,52 @@
     ViewData["Title"] = "Lot";
 }
 
-<div class="text-center">
+@{
+    var minimalBet = Model.AuctionLot.CurrentPrice + Model.AuctionLot.BidStep;
+}
+
+<div class="container-fluid">
     <h1 class="display-4">Lot @Model.AuctionLot.AuctionNumber</h1>
     <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
 
-    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.AuctionLot.Image)" alt="@Model.AuctionLot.LotName Photo" />
-    
-    <div>
-        <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
-            <input id="bidSum" name="bidSum" type="number" min="@Model.AuctionLot.CurrentPrice" step="@Model.AuctionLot.BidStep">
-            <input type="submit" value="Place a Bet">
-        </form>
-        
-        @if (Model.AuctionLot.FullPrice != null)
-        {
-            <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
-                <input type="submit" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+    <div class="row">
+        <div class="col">
+            <img class="rounded float-left img-thumbnail" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.AuctionLot.Image)"
+                 alt="@Model.AuctionLot.LotName Photo" style="max-height: 500px;" />
+        </div>
+        <div class="col">
+            <h6>Start Price: @Model.AuctionLot.StartPrice.ToString("##.##") $</h6>
+            <h6>Current Price: @Model.AuctionLot.CurrentPrice.ToString("##.##") $</h6>
+
+            @if (Model.AuctionLot.FullPrice != null)
+            {
+                <h6>Full Price: @Model.AuctionLot.FullPrice.Value.ToString("##.##") $</h6>
+            }
+
+            <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
+                <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
+                <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
             </form>
-        }
+
+            @if (Model.AuctionLot.FullPrice != null)
+            {
+                <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
+                    <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                </form>
+            }
+        </div>
     </div>
-    
-    <partial name="Lot/_LotChatPartial"/>
+    <div class="row">
+        <h4 class="mt-2 mb-2">Description</h4>
+    </div>
+    <div class="row">
+        <p class="text-justify">
+            @Model.AuctionLot.Description
+        </p>
+    </div>
+    <div class="row justify-content-center">
+        <partial name="Lot/_LotChatPartial" />
+    </div>
 </div>
 
 

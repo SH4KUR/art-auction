@@ -65,15 +65,20 @@ namespace ArtAuction.Core.Application.Handlers
                 SumOperation = request.Sum,
                 SumAfter = userAccount.Sum - request.Sum
             };
-
-            userAccount.LastUpdate = bidDateTime;
-            userAccount.Sum = operation.SumAfter;
             
             await _accountRepository.AddOperation(operation);
-            await _accountRepository.UpdateAccount(userAccount);
 
             auction.CurrentPrice = request.Sum;
             await _auctionRepository.UpdateAuctionAsync(auction);
+
+            await _auctionRepository.AddBidAsync(new Bid
+            {
+                BidId = Guid.NewGuid(),
+                AuctionId = auction.AuctionId,
+                UserId = userAccount.UserId,
+                Sum = request.Sum,
+                DateTime = bidDateTime
+            });
 
             // notification message in chat
             await _auctionRepository.AddMessageAsync(new Message
@@ -104,11 +109,7 @@ namespace ArtAuction.Core.Application.Handlers
                     SumAfter = lastBidUserAccount.Sum + lastBid.Sum
                 };
 
-                lastBidUserAccount.LastUpdate = bidDateTime;
-                lastBidUserAccount.Sum = lastBidRefundOperation.SumAfter;
-
                 await _accountRepository.AddOperation(lastBidRefundOperation);
-                await _accountRepository.UpdateAccount(lastBidUserAccount);
             }
 
             return Unit.Value;
