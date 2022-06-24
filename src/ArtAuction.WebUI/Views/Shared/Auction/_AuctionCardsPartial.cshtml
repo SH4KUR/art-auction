@@ -12,10 +12,11 @@
                     <p class="card-subtitle"><small class="text-muted"><i class="fa-solid fa-hourglass-start mr-2"></i>@auction.StartBillingDateTime.ToString("MM/dd/yyyy HH:mm:ss")</small></p>
                     <p class="card-subtitle"><small class="text-muted"><i class="fa-solid fa-hourglass-end mr-2"></i>@auction.EndBillingDateTime.ToString("MM/dd/yyyy HH:mm:ss")</small></p>
                 </div>
-                
             </div>
+
             <img class="rounded mx-auto d-block mt-2" src="data:image/jpeg;base64,@Convert.ToBase64String(auction.Image)"
                  style="height: 175px" alt="@auction.LotName Photo"/>
+
             <div class="card-body">
                 <h5 class="card-title text-center">@auction.LotName</h5>
                 <h6 class="card-subtitle mb-2 text-muted text-center">@auction.CategoryName</h6>
