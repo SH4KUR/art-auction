@@ -4,7 +4,7 @@
     @foreach (var auction in Model.Auctions)
     {
         <div class="card mb-2" style="width: 23rem;">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center @(auction.IsVip ? "bg-warning" : string.Empty)">
                 <a class="card-subtitle text-muted text-center" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@auction.SellerLogin">
                     <i class="fa-solid fa-user-tie mr-2"></i>@auction.SellerLogin
                 </a>
