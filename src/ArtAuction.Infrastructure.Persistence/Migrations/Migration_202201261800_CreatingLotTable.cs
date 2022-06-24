@@ -8,11 +8,11 @@ namespace ArtAuction.Infrastructure.Persistence.Migrations
         public override void Up()
         {
             Create.Table("lot")
-                .WithColumn("lot_id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
+                .WithColumn("lot_id").AsGuid().NotNullable().PrimaryKey()
                 .WithColumn("category_id").AsGuid().NotNullable()
                 .WithColumn("name").AsString(200).NotNullable()
                 .WithColumn("painting_date").AsString(50).NotNullable()
-                .WithColumn("photo").AsBinary().NotNullable()
+                .WithColumn("photo").AsCustom("VARBINARY(MAX)").NotNullable()
                 .WithColumn("description").AsString(1000).NotNullable();
 
             Create.ForeignKey()
