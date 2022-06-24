@@ -14,7 +14,8 @@ namespace ArtAuction.WebUI
         {
             CreateMap<AccountRegistrationViewModel, RegisterUserCommand>();
             CreateMap<CreateAuctionLotViewModel, CreateAuctionCommand>();
-            CreateMap<AuctionCatalogDto, AuctionViewModel>();
+            CreateMap<AuctionCatalogDto, AuctionViewModel>()
+                .ForMember(vm => vm.Image, dto => dto.MapFrom(d => d.Photo));
             CreateMap<BidDto, BidViewModel>();
             CreateMap<MessageDto, MessageViewModel>();
             CreateMap<UserDto, UserViewModel>();

@@ -3,14 +3,39 @@
 <div class="d-flex flex-wrap justify-content-around">
     @foreach (var auction in Model.Auctions)
     {
-        <div class="col-xl-4 col-sm-6 p-2">
-            <a class="btn btn-outline-secondary" asp-action="Index" asp-controller="Lot" asp-route-auctionNumber="@auction.AuctionNumber">
-                @auction.AuctionNumber
-            </a>
+        <div class="card mb-2" style="width: 23rem;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <a class="card-subtitle text-muted text-center" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@auction.SellerLogin">
+                    <i class="fa-solid fa-user-tie mr-2"></i>@auction.SellerLogin
+                </a>
+                <div>
+                    <p class="card-subtitle"><small class="text-muted"><i class="fa-solid fa-hourglass-start mr-2"></i>@auction.StartBillingDateTime.ToString("MM/dd/yyyy HH:mm:ss")</small></p>
+                    <p class="card-subtitle"><small class="text-muted"><i class="fa-solid fa-hourglass-end mr-2"></i>@auction.EndBillingDateTime.ToString("MM/dd/yyyy HH:mm:ss")</small></p>
+                </div>
+                
+            </div>
+            <img class="rounded mx-auto d-block mt-2" src="data:image/jpeg;base64,@Convert.ToBase64String(auction.Image)"
+                 style="height: 175px" alt="@auction.LotName Photo"/>
+            <div class="card-body">
+                <h5 class="card-title text-center">@auction.LotName</h5>
+                <h6 class="card-subtitle mb-2 text-muted text-center">@auction.CategoryName</h6>
 
-            <a class="btn btn-outline-secondary" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@auction.SellerLogin">
-                @auction.SellerLogin
-            </a>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <p class="card-subtitle mt-2 text-muted">StartPrice Price: @auction.StartPrice.ToString("##.##") $</p>
+                        <p class="card-subtitle mt-2 text-muted">Current Price: @auction.CurrentPrice.ToString("##.##") $</p>
+
+                        @if (auction.FullPrice.HasValue)
+                        {
+                            <p class="card-subtitle mt-2 text-muted">Full Price: @auction.FullPrice.Value.ToString("##.##") $</p>
+                        }
+                    </li>
+                </ul>
+                
+                <a class="btn btn-outline-secondary btn-block mt-2" asp-action="Index" asp-controller="Lot" asp-route-auctionNumber="@auction.AuctionNumber">
+                    Details
+                </a>
+            </div>
         </div>
     }
 </div>
