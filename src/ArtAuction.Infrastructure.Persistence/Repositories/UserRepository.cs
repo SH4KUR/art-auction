@@ -120,7 +120,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
         {
             var query = @"
                 SELECT 
-                     [complaint_id] AS ReviewId
+                     [complaint_id] AS ComplaintId
                     ,[user_id_from] AS UserIdFrom
                     ,[user_id_on] AS UserIdOn
                     ,[date_time] AS DateTime

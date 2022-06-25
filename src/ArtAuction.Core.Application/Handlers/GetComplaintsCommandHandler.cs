@@ -23,6 +23,7 @@ namespace ArtAuction.Core.Application.Handlers
             var complaints = await _userRepository.GetComplaints();
             return complaints.Select(complaint => new ComplaintDto
             {
+                ComplaintId = complaint.ComplaintId,
                 UserLoginOn = _userRepository.GetUser(complaint.UserIdOn).Login,
                 UserLoginFrom = _userRepository.GetUser(complaint.UserIdFrom).Login,
                 DateTime = complaint.DateTime,

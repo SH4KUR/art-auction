@@ -43,12 +43,15 @@
                 <td>
                     @if (complaint.IsProcessed)
                     {
-                        <div>Processed</div>
+                        <a class="btn btn-outline-dark btn-block disabled">
+                            Processed
+                        </a>
                     }
                     else
                     {
-                        <a class="btn btn-outline-success btn-block">
-                            Close
+                        <a class="btn btn-outline-success btn-block" asp-action="MarkComplaintProcessed" asp-controller="Admin" 
+                           asp-route-complaintId="@complaint.ComplaintId">
+                            Mark processed
                         </a>
                     }
                 </td>
