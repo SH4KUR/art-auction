@@ -25,7 +25,7 @@ namespace ArtAuction.Core.Application.Handlers
             var user = await _userRepository.GetUserAsync(request.UserLogin);
             var userDto = _mapper.Map<UserDto>(user);
 
-            var reviews = (await _userRepository.GetUserReviews(request.UserLogin)).ToArray();
+            var reviews = (await _userRepository.GetUserReviews(user.UserId)).ToArray();
             userDto.AvgRate = reviews.Any() ? (decimal) reviews.Average(r => r.Rate) : decimal.Zero;
 
             return userDto;

@@ -9,7 +9,9 @@ namespace ArtAuction.Core.Application.Interfaces.Repositories
     {
         Task<User> GetUserAsync(string login);
         User GetUser(Guid userId);
-        Task<IEnumerable<Review>> GetUserReviews(string login);
+        Task<IEnumerable<Review>> GetUserReviews(Guid userId);
+        Task<IEnumerable<Complaint>> GetUserComplaints(Guid userId);
+        Task<IEnumerable<Complaint>> GetComplaints();
         Task AddUserAsync(User user);
         void UpdateUser(User user);
 

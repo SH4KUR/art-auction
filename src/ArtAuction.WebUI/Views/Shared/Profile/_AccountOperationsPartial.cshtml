@@ -1,0 +1,44 @@
+﻿@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
+
+<table class="mt-2 mb-3"
+       data-toggle="table"
+       data-pagination="true"
+       data-pagination-h-align="left"
+       data-pagination-detail-h-align="right"
+       data-search="true"
+       data-show-columns="true"
+       data-sort-class="table-active"
+       data-sortable="true"
+       data-page-list="[2, 5, 10, 25, 50, 100, all]">
+    <thead>
+    <tr>
+        <th data-sortable="true">Auction #</th>
+        <th>Photo</th>
+        <th data-sortable="true">Lot Name</th>
+        <th>Painting Date</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var auction in Model.Auctions)
+    {
+        <tr>
+            <td>@auction.AuctionNumber.ToString("000000")</td>
+            <td>
+                <img class="rounded float-left img-thumbnail" src="data:image/jpeg;base64,@Convert.ToBase64String(auction.Image)"
+                     alt="@auction.LotName Photo" style="max-height: 150px;" />
+            </td>
+            <td>@auction.LotName</td>
+            <td>@auction.PaintingDate</td>
+            <td>
+                <a class="btn btn-outline-secondary" asp-action="Index" asp-controller="Lot"
+                   asp-route-auctionNumber="@auction.AuctionNumber">
+                    Details
+                </a>
+            </td>
+        </tr>
+    }
+
+    </tbody>
+</table>

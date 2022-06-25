@@ -72,26 +72,65 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             });
         }
 
-        public async Task<IEnumerable<Review>> GetUserReviews(string login)
+        public async Task<IEnumerable<Review>> GetUserReviews(Guid userId)
         {
             var query = @"
                 SELECT 
-                     r.[review_id] AS ReviewId
-                    ,r.[user_id_from] AS UserIdFrom
-                    ,r.[user_id_on] AS UserIdOn
-                    ,r.[date_time] AS DateTime
-                    ,r.[rate]
-                    ,r.[description]
-                FROM [dbo].[review] AS r INNER JOIN [dbo].[user] AS u
-                    ON r.[user_id_on] = u.[user_id]
+                     [review_id] AS ReviewId
+                    ,[user_id_from] AS UserIdFrom
+                    ,[user_id_on] AS UserIdOn
+                    ,[date_time] AS DateTime
+                    ,[rate]
+                    ,[description]
+                FROM [dbo].[review] 
                 WHERE 
-                    u.[login] = @UserLogin";
+                    [user_id_on] = @UserId
+                ORDER BY [date_time] DESC";
 
             await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
             return await connection.QueryAsync<Review>(query, new
             {
-                UserLogin = login
+                UserId = userId
             });
+        }
+
+        public async Task<IEnumerable<Complaint>> GetUserComplaints(Guid userId)
+        {
+            var query = @"
+                SELECT 
+                     [complaint_id] AS ReviewId
+                    ,[user_id_from] AS UserIdFrom
+                    ,[user_id_on] AS UserIdOn
+                    ,[date_time] AS DateTime
+                    ,[description]
+                    ,[is_processed] AS IsProcessed
+                FROM [dbo].[complaint]
+                WHERE 
+                    [user_id_on] = @UserId
+                ORDER BY [date_time] DESC";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryAsync<Complaint>(query, new
+            {
+                UserId = userId
+            });
+        }
+
+        public async Task<IEnumerable<Complaint>> GetComplaints()
+        {
+            var query = @"
+                SELECT 
+                     [complaint_id] AS ReviewId
+                    ,[user_id_from] AS UserIdFrom
+                    ,[user_id_on] AS UserIdOn
+                    ,[date_time] AS DateTime
+                    ,[description]
+                    ,[is_processed] AS IsProcessed
+                FROM [dbo].[complaint]
+                ORDER BY [date_time] DESC";
+
+            await using var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection));
+            return await connection.QueryAsync<Complaint>(query);
         }
 
         public async Task<User> GetUserAsync(Guid userId)

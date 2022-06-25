@@ -7,5 +7,7 @@ namespace ArtAuction.WebUI.Models.Profile
     {
         public UserViewModel User { get; set; }
         public IEnumerable<AuctionViewModel> Auctions { get; set; }
+        public IEnumerable<ComplaintViewModel> Complaints { get; set; }
+        public IEnumerable<ReviewViewModel> Reviews { get; set; }
     }
 }

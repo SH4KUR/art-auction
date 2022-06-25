@@ -49,12 +49,16 @@ namespace ArtAuction.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserProfile(string userLogin)
         {
-            var userAuctions = await _mediator.Send(new GetUserAuctionsCommand(userLogin));
-            
+            var auctions = await _mediator.Send(new GetUserAuctionsCommand(userLogin));
+            var reviews = await _mediator.Send(new GetUserReviewsCommand(userLogin));
+            var complaints = await _mediator.Send(new GetUserComplaintsCommand(userLogin));
+
             var model = new UserProfileViewModel
             {
                 User = _mapper.Map<UserViewModel>(await _mediator.Send(new GetUserCommand(userLogin))),
-                Auctions = userAuctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
+                Auctions = auctions.Select(a => _mapper.Map<AuctionViewModel>(a)),
+                Reviews = reviews.Select(r => _mapper.Map<ReviewViewModel>(r)),
+                Complaints = complaints.Select(c => _mapper.Map<ComplaintViewModel>(c))
             };
 
             return View("UserProfile", model);
