@@ -1,6 +1,17 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+﻿@using ArtAuction.Core.Domain.Enums
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 
 <ul class="navbar-nav">
+    
+    @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Administrator.ToString()))
+    {
+        <li class="nav-item">
+            <a asp-controller="Admin" asp-action="Index" class="nav-link text-dark">
+                <i class="fa-solid fa-screwdriver-wrench mr-2"></i>Admin Page
+            </a>
+        </li>
+    }
+
     <li class="nav-item">
         <a asp-controller="Profile" asp-action="Index" class="nav-link text-dark">
             <i class="fa-solid fa-circle-user mr-2"></i>@HttpContextAccessor.HttpContext.User.Identity.Name

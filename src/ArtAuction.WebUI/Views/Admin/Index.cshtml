@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ArtAuction.WebUI.Models.Profile.ComplaintViewModel>
+
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+<h2 class="text-center">Complaints</h2>
+
+<table class="mt-3 mb-3"
+       data-toggle="table"
+       data-pagination="true"
+       data-pagination-h-align="left"
+       data-pagination-detail-h-align="right"
+       data-search="true"
+       data-show-columns="true"
+       data-page-list="[2, 5, 10, 25, 50, 100, all]">
+    <thead>
+        <tr>
+            <th>Date Time</th>
+            <th>User From</th>
+            <th>User On</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var complaint in Model)
+        {
+            <tr>
+                <td>@complaint.DateTime.ToString("MM/dd/yyyy HH:mm:ss")</td>
+                <td><a class="card-subtitle text-muted text-center" asp-action="GetUserProfile" asp-controller="Profile" 
+                       asp-route-userLogin="@complaint.UserLoginFrom">
+                    <i class="fa-solid fa-user-tie mr-2"></i>@complaint.UserLoginFrom
+                </a></td>
+                <td>
+                    <a class="card-subtitle text-muted text-center" asp-action="GetUserProfile" asp-controller="Profile" 
+                       asp-route-userLogin="@complaint.UserLoginOn">
+                        <i class="fa-solid fa-user-tie mr-2"></i>@complaint.UserLoginOn
+                    </a>
+                </td>
+                <td>@complaint.Description</td>
+                <td>
+                    @if (complaint.IsProcessed)
+                    {
+                        <div>Processed</div>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-success btn-block">
+                            Close
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
