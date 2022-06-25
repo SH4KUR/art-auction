@@ -1,12 +1,12 @@
 ﻿@using ArtAuction.Core.Domain.Enums
-@model ArtAuction.WebUI.Models.Profile.UserViewModel
+@model ArtAuction.WebUI.Models.Profile.UserOperationsViewModel
 
 @{
     ViewData["Title"] = "Profile";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Profile @Model.Login</h1>
+    <h1 class="display-4">Profile @Model.User.Login</h1>
     <h4>Balance: @ViewData["AccountBalance"] $</h4>
 
     <form asp-controller="Payment" asp-action="ReplenishPersonalAccount">
@@ -28,5 +28,44 @@
             Buy VIP by Card
         </a>
     }
+    
+    <h2>Operations</h2>
+
+    <table class="mt-2 mb-3"
+           data-toggle="table"
+           data-pagination="true"
+           data-pagination-h-align="left"
+           data-pagination-detail-h-align="right"
+           data-search="true"
+           data-show-columns="true"
+           data-sort-class="table-active"
+           data-sortable="true"
+           data-page-list="[5, 10, 25, 50, 100, all]">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Operation</th>
+            <th>Sum</th>
+            <th>Before</th>
+            <th>After</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>    
+    
+        @foreach (var operation in Model.Operations)
+        {
+            <tr>
+                <td>@operation.DateTime.ToString("MM/dd/yyyy HH:mm:ss")</td>
+                <td>@operation.OperationType.ToString()</td>
+                <td>@operation.SumOperation.ToString("#0.00") $</td>
+                <td>@operation.SumBefore.ToString("#0.00") $</td>
+                <td>@operation.SumAfter.ToString("#0.00") $</td>
+                <td>@operation.Description</td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
 
 </div>

@@ -31,13 +31,14 @@ namespace ArtAuction.WebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var userLogin = User?.FindFirst(ClaimTypes.Name)?.Value;
-            if (userLogin == null)
-            {
-                RedirectToAction("Index", "Home"); // TODO: Throw
-            }
+            var userOperations = await _mediator.Send(new GetAccountOperationsCommand(userLogin));
 
-            var model = _mapper.Map<UserViewModel>(await _mediator.Send(new GetUserCommand(userLogin)));
-            
+            var model = new UserOperationsViewModel
+            {
+                User = _mapper.Map<UserViewModel>(await _mediator.Send(new GetUserCommand(userLogin))),
+                Operations = userOperations.Select(o => _mapper.Map<OperationViewModel>(o))
+            };
+
             ViewData["AccountBalance"] = await _mediator.Send(new GetCurrentAccountBalanceCommand(userLogin));
             ViewData["VipStatusCost"] = Convert.ToDecimal(_configuration["App:VipStatusCost"]);
             ViewData["VipStatusDaysCount"] = Convert.ToInt32(_configuration["App:VipStatusDaysCount"]);

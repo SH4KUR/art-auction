@@ -23,12 +23,12 @@
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <p class="card-subtitle mt-2 text-muted">StartPrice Price: @auction.StartPrice.ToString("##.##") $</p>
-                        <p class="card-subtitle mt-2 text-muted">Current Price: @auction.CurrentPrice.ToString("##.##") $</p>
+                        <p class="card-subtitle mt-2 text-muted">StartPrice Price: @auction.StartPrice.ToString("##.00") $</p>
+                        <p class="card-subtitle mt-2 text-muted">Current Price: @auction.CurrentPrice.ToString("##.00") $</p>
 
                         @if (auction.FullPrice.HasValue)
                         {
-                            <p class="card-subtitle mt-2 text-muted">Full Price: @auction.FullPrice.Value.ToString("##.##") $</p>
+                            <p class="card-subtitle mt-2 text-muted">Full Price: @auction.FullPrice.Value.ToString("##.00") $</p>
                         }
                     </li>
                 </ul>
