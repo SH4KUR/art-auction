@@ -9,6 +9,16 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "library": "bootstrap-table@1.20.2",
+      "destination": "wwwroot/lib/bootstrap-table/",
+      "files": [
+        "dist/bootstrap-table.css",
+        "dist/bootstrap-table.js",
+        "dist/bootstrap-table.min.css",
+        "dist/bootstrap-table.min.js"
+      ]
     }
   ]
 }

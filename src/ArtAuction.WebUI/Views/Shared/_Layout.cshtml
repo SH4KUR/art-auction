@@ -6,9 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ArtAuction.WebUI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/chatLot.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-table/dist/bootstrap-table.min.css">
 </head>
 <body>
     <header>
@@ -43,7 +44,7 @@
             </div>
         </nav>
     </header>
-    <div class="container p-4">
+    <div class="container p-4 mb-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -54,10 +55,11 @@
             &copy; 2022 - ArtAuction.WebUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script src="https://kit.fontawesome.com/8d7552c415.js" crossorigin="anonymous"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-table/dist/bootstrap-table.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://kit.fontawesome.com/8d7552c415.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
