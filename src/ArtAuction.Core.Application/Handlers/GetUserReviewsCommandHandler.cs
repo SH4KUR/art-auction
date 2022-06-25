@@ -25,8 +25,8 @@ namespace ArtAuction.Core.Application.Handlers
             var reviews = await _userRepository.GetUserReviews(user.UserId);
             return reviews.Select(review => new ReviewDto
             {
-                UserIdOn = user.Login,
-                UserIdFrom = _userRepository.GetUser(review.UserIdFrom).Login,
+                UserLoginOn = user.Login,
+                UserLoginFrom = _userRepository.GetUser(review.UserIdFrom).Login,
                 DateTime = review.DateTime,
                 Rate = review.Rate,
                 Description = review.Description,

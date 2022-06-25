@@ -63,5 +63,32 @@ namespace ArtAuction.WebUI.Controllers
 
             return View("UserProfile", model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComplaint(ComplaintViewModel model)
+        {
+            await _mediator.Send(new AddUserComplaintCommand
+            {
+                UserLoginOn = model.UserLoginOn,
+                UserLoginFrom = User?.FindFirst(ClaimTypes.Name)?.Value,
+                Description = model.Description
+            });
+            
+            return RedirectToAction("GetUserProfile", new { userLogin = model.UserLoginOn });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReview(ReviewViewModel model)
+        {
+            await _mediator.Send(new AddUserReviewCommand
+            {
+                UserLoginOn = model.UserLoginOn,
+                UserLoginFrom = User?.FindFirst(ClaimTypes.Name)?.Value,
+                Rate = model.Rate,
+                Description = model.Description
+            });
+
+            return RedirectToAction("GetUserProfile", new { userLogin = model.UserLoginOn });
+        }
     }
 }
