@@ -1,11 +1,33 @@
-﻿@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
+﻿@using ArtAuction.Core.Domain.Enums
+@model ArtAuction.WebUI.Models.Profile.UserProfileViewModel
 
 @{
     ViewData["Title"] = "User Profile";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Profile @Model.User.Login</h1>
+    <h1 class="display-4">
+        Profile @Model.User.Login
+
+        @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Administrator.ToString()))
+        {
+            if (Model.User.IsBlocked)
+            {
+                <a class="btn btn-outline-danger btn-sm" asp-action="UnblockUser" asp-controller="Admin"
+                   asp-route-userLogin="@Model.User.Login">
+                    Unblock
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-outline-danger btn-sm" asp-action="BlockUser" asp-controller="Admin"
+                   asp-route-userLogin="@Model.User.Login">
+                    Block
+                </a>
+            }
+        }
+
+    </h1>
     <h3>Rate: @Model.User.AvgRate.ToString("F1")</h3>
 </div>
 

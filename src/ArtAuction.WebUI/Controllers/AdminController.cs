@@ -34,12 +34,14 @@ namespace ArtAuction.WebUI.Controllers
         
         public async Task<IActionResult> BlockUser(string userLogin)
         {
-            return RedirectToAction("Index");
+            await _mediator.Send(new BlockUserCommand(userLogin));
+            return RedirectToAction("GetUserProfile", "Profile", new { userLogin });
         }
         
         public async Task<IActionResult> UnblockUser(string userLogin)
         {
-            return RedirectToAction("Index");
+            await _mediator.Send(new UnblockUserCommand(userLogin));
+            return RedirectToAction("GetUserProfile", "Profile", new { userLogin });
         }
     }
 }
