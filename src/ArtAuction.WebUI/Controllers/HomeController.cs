@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
 using ArtAuction.WebUI.Models.AuctionCatalog;
-using ArtAuction.WebUI.Models.Lot;
 using AutoMapper;
 using MediatR;
 
