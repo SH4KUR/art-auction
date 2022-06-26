@@ -1,22 +1,31 @@
 ﻿using ArtAuction.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using ArtAuction.Core.Application.Commands;
+using ArtAuction.WebUI.Models.AuctionCatalog;
+using ArtAuction.WebUI.Models.Lot;
+using AutoMapper;
+using MediatR;
 
 namespace ArtAuction.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMediator mediator, IMapper mapper)
         {
-            _logger = logger;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var lastAuctions = await _mediator.Send(new GetLastAuctionsCommand());
+            return View(lastAuctions.Select(auction => _mapper.Map<AuctionViewModel>(auction)));
         }
 
         public IActionResult Privacy()

@@ -135,8 +135,8 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                     var reader = await connection.QueryMultipleAsync(query, transaction: transaction);
 
                     totalCount = await reader.ReadFirstAsync<int>();
-                    auctions = (List<Auction>) await reader.ReadAsync<Auction>();
-                    
+                    auctions = (List<Auction>)await reader.ReadAsync<Auction>();
+
                     if (auctions.Any())
                     {
                         foreach (var auction in auctions)
@@ -158,6 +158,53 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 CurrentPage = pageNumber,
                 RowsOnPage = rowsOnPage
             };
+        }
+
+        public async Task<IEnumerable<Auction>> GetLastAuctions(int count)
+        {
+            var query = $@"
+                SELECT TOP {count}
+	                 [auction_id] AS AuctionId
+	                ,[auction_number] AS AuctionNumber
+                    ,[lot_id] AS LotId
+                    ,[seller_id] AS SellerId
+                    ,[creation_datetime] AS CreationDateTime
+                    ,[start_billing_datetime] AS StartBillingDateTime
+                    ,[end_billing_datetime] AS EndBillingDateTime
+                    ,[start_price] AS StartPrice
+                    ,[current_price] AS CurrentPrice
+                    ,[full_price] AS FullPrice
+                    ,[bid_step] AS BidStep
+                    ,[is_vip] AS IsVip
+                    ,[is_closed] AS IsClosed
+                    ,[customer_id] AS CustomerId
+                FROM [dbo].[auction]
+                ORDER BY [creation_datetime] DESC";
+            
+            IEnumerable<Auction> auctions;
+
+            await using (var connection = new SqlConnection(_configuration.GetConnectionString(InfrastructureConstants.ArtAuctionDbConnection)))
+            {
+                await connection.OpenAsync();
+                await using (var transaction = await connection.BeginTransactionAsync())
+                {
+                    auctions = await connection.QueryAsync<Auction>(query, transaction: transaction);
+
+                    if (auctions.Any())
+                    {
+                        foreach (var auction in auctions)
+                        {
+                            auction.Lot = await GetLot(auction.LotId, connection, transaction);
+                            auction.Bids = await GetBids(auction.AuctionId, connection, transaction);
+                            auction.Messages = await GetMessages(auction.AuctionId, connection, transaction);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+            }
+
+            return auctions;
         }
 
         private string GetCategoriesFilterSql(string[] filterCategories)

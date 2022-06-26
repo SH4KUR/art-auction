@@ -1,6 +1,7 @@
 ﻿@model ArtAuction.WebUI.Models.AuctionCatalog.AuctionCatalogViewModel
 
 <div class="d-flex flex-column col-md-3 p-2">
+    <h5 class="mt-2 mb-2">Categories</h5>
     @foreach (var category in Model.Filter.Categories)
     {
         <div class="form-check">
@@ -8,6 +9,8 @@
             <label class="form-check-label">@category.Text</label>
         </div>
     }
+
+    <h5 class="mt-2 mb-2">Price</h5>
 
     <div class="form-group">
         <label class="control-label">Min current price</label>
