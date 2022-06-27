@@ -11,7 +11,9 @@
 }
 
 <div class="container-fluid">
-    <h1 class="display-4">Lot @Model.AuctionLot.AuctionNumber @(Model.AuctionLot.IsClosed ? "(closed)" : string.Empty)</h1>
+    <h1 class="display-4">@Model.AuctionLot.LotName</h1>
+    <h3>Lot @Model.AuctionLot.AuctionNumber @(Model.AuctionLot.IsClosed ? "(closed)" : string.Empty)</h3>
+
     <input id="auctionNumber" name="auctionNumber" value="@Model.AuctionLot.AuctionNumber" hidden />
 
     <div class="row">
