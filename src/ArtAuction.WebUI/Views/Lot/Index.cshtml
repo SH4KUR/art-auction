@@ -49,8 +49,8 @@
             <h5>Start Billing Date: @Model.AuctionLot.StartBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</h5>
             <h5>End Billing Date: <span id="endBillingDate">@Model.AuctionLot.EndBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</span></h5>
 
-            <h6 class="mt-4">Start Price: @Model.AuctionLot.StartPrice.ToString("##.##") $</h6>
-            <h6>Current Price: <span id="currentPrice">@Model.AuctionLot.CurrentPrice.ToString("##.##")</span> $</h6>
+            <h6 class="mt-4">Start Price: @Model.AuctionLot.StartPrice.ToString("#0.00") $</h6>
+            <h6>Current Price: <span id="currentPrice">@Model.AuctionLot.CurrentPrice.ToString("#0.00")</span> $</h6>
 
             @if (!Model.AuctionLot.IsClosed)
             {
@@ -62,14 +62,14 @@
                 @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Customer.ToString()))
                 {
                     <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
-                        <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
+                        <input id="bidSum" name="bidSum" type="number" min="@minimalBet.ToString("##.##")" step="@Model.AuctionLot.BidStep" value="@minimalBet.ToString("##.##")">
                         <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
                     </form>
 
                     @if (Model.AuctionLot.FullPrice != null)
                     {
                         <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
-                            <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                            <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value.ToString("#0.00") $">
                         </form>
                     }
                 }
