@@ -49,7 +49,7 @@ namespace ArtAuction.Core.Application.Handlers
                     AccountId = account.AccountId,
                     OperationType = OperationType.Withdraw,
                     DateTime = DateTime.Now,
-                    Description = "Purchase of VIP status by Card.",
+                    Description = $"Purchase of VIP status by Card (until {DateTime.Now.AddDays(Convert.ToInt32(_configuration["App:VipStatusDaysCount"])):MM/dd/yyyy HH:mm:ss})",
                     SumBefore = account.Sum,
                     SumOperation = 0,
                     SumAfter = account.Sum
@@ -63,7 +63,7 @@ namespace ArtAuction.Core.Application.Handlers
                     AccountId = account.AccountId,
                     OperationType = OperationType.Withdraw,
                     DateTime = DateTime.Now,
-                    Description = "Purchase of VIP status.",
+                    Description = $"Purchase of VIP status (until {DateTime.Now.AddDays(Convert.ToInt32(_configuration["App:VipStatusDaysCount"])):MM/dd/yyyy HH:mm:ss})",
                     SumBefore = account.Sum,
                     SumOperation = vipCost,
                     SumAfter = account.Sum - vipCost

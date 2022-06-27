@@ -6,7 +6,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Profile @Model.User.Login</h1>
+    <h1 class="display-4">
+        @if (Model.User.IsVip)
+        {
+            <i class="fa-solid fa-crown mr-2"></i>
+        }
+        Profile @Model.User.Login
+    </h1>
     <h4>Balance: @(((decimal)ViewData["AccountBalance"]).ToString("#0.00")) $</h4>
 
     <form class="form-inline justify-content-center mt-3 mb-3" asp-controller="Payment" asp-action="ReplenishPersonalAccount">
@@ -20,12 +26,19 @@
 
     @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
     {
-        <a asp-controller="Payment" asp-action="BuyVipStatus" class="btn btn-lg btn-primary">
-            Buy VIP on @(ViewData["VipStatusDaysCount"]) days (@(ViewData["VipStatusCost"])$)
-        </a>
-        <a asp-controller="Payment" asp-action="BuyVipByCard" class="btn btn-lg btn-primary">
-            Buy VIP by Card
-        </a>
+        @if (Model.User.IsVip)
+        {
+            <h5>You are already a <i class="fa-solid fa-crown mr-1"></i>VIP Seller!</h5>
+        }
+        else
+        {
+            <a asp-controller="Payment" asp-action="BuyVipStatus" class="btn btn-lg btn-primary">
+                Buy VIP on @(ViewData["VipStatusDaysCount"]) days (@(ViewData["VipStatusCost"])$)
+            </a>
+            <a asp-controller="Payment" asp-action="BuyVipByCard" class="btn btn-lg btn-primary">
+                Buy VIP by Card
+            </a>   
+        }
     }
     
     <h2 class="mt4">Operations</h2>
