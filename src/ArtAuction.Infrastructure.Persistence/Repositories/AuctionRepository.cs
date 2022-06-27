@@ -427,6 +427,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
                 UPDATE [dbo].[auction]
                 SET
                      [current_price] = @CurrentPrice
+                    ,[end_billing_datetime] = @EndBillingDateTime
                     ,[is_closed] = @IsClosed
                     ,[customer_id] = @CustomerId
                 WHERE
@@ -437,6 +438,7 @@ namespace ArtAuction.Infrastructure.Persistence.Repositories
             {
                 auction.AuctionId,
                 auction.CurrentPrice,
+                auction.EndBillingDateTime,
                 auction.IsClosed,
                 auction.CustomerId
             });
