@@ -68,6 +68,7 @@ namespace ArtAuction.WebUI.Controllers
             });
 
             await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
+            await _hubContext.Clients.Group(model.AuctionNumber.ToString()).SendAsync("RefreshChatMessages");
         }
 
         [HttpPost("{auctionNumber}/BuyFullPrice")]

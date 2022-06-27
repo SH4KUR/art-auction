@@ -20,6 +20,18 @@
                  alt="@Model.AuctionLot.LotName Photo" style="max-height: 500px;" />
         </div>
         <div class="col">
+            
+            <a class="text-center text-muted mb-4" style="font-size: 1.2rem;" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@Model.AuctionLot.SellerLogin">
+                @if (Model.AuctionLot.IsVip)
+                {
+                    <i class="fa-solid fa-crown mr-2"></i>
+                }
+
+                <i class="fa-solid fa-user-tie mr-2"></i>@Model.AuctionLot.SellerLogin
+            </a>
+
+            <h6 class="mt-4 mb-3">Painting Date: @Model.AuctionLot.PaintingDate</h6>
+
             <h5>Start Billing Date: @Model.AuctionLot.StartBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</h5>
             <h5>End Billing Date: <span id="endBillingDate">@Model.AuctionLot.EndBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</span></h5>
 
@@ -30,8 +42,8 @@
             {
                 <h6>Full Price: @Model.AuctionLot.FullPrice.Value.ToString("##.##") $</h6>
             }
-            
-            @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
+
+            @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Customer.ToString()))
             {
                 <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
                     <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
@@ -48,8 +60,8 @@
 
         </div>
     </div>
-    <div class="row">
-        <h4 class="mt-2 mb-2">Description</h4>
+    <div class="row mt-4">
+        <h4 class="mb-2">Description</h4>
     </div>
     <div class="row">
         <p class="text-justify">
@@ -74,7 +86,6 @@
 
     connection.on('RefreshCurrentPrice', function () {
         refreshCurrentPrice();
-        refreshMessages();
     });
 
     connection
