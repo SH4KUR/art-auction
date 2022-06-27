@@ -32,6 +32,10 @@
     text-align: right;
 }
 
+.chat-log__item.chat-log__item--admin {
+    background: #FFEE63;
+}
+
 .chat-form {
     padding: 40px 0;
     width: 100%;

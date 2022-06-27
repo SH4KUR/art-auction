@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using ArtAuction.Core.Domain.Enums
 @model ArtAuction.WebUI.Models.Lot.AuctionLotViewModel
 
 @{
@@ -19,25 +20,32 @@
                  alt="@Model.AuctionLot.LotName Photo" style="max-height: 500px;" />
         </div>
         <div class="col">
-            <h6>Start Price: @Model.AuctionLot.StartPrice.ToString("##.##") $</h6>
-            <h6>Current Price: @Model.AuctionLot.CurrentPrice.ToString("##.##") $</h6>
+            <h5>Start Billing Date: @Model.AuctionLot.StartBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</h5>
+            <h5>End Billing Date: <span id="endBillingDate">@Model.AuctionLot.EndBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</span></h5>
+
+            <h6 class="mt-4">Start Price: @Model.AuctionLot.StartPrice.ToString("##.##") $</h6>
+            <h6>Current Price: <span id="currentPrice">@Model.AuctionLot.CurrentPrice.ToString("##.##")</span> $</h6>
 
             @if (Model.AuctionLot.FullPrice != null)
             {
                 <h6>Full Price: @Model.AuctionLot.FullPrice.Value.ToString("##.##") $</h6>
             }
-
-            <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
-                <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
-                <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
-            </form>
-
-            @if (Model.AuctionLot.FullPrice != null)
+            
+            @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
             {
-                <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
-                    <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
+                    <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
+                    <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
                 </form>
+
+                @if (Model.AuctionLot.FullPrice != null)
+                {
+                    <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
+                        <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                    </form>
+                }
             }
+
         </div>
     </div>
     <div class="row">
@@ -83,7 +91,32 @@
 
 
     function refreshCurrentPrice() {
-        // TODO: Update
+        var auctionNumber = parseInt(document.getElementById('auctionNumber').value);
+
+        fetch(auctionNumber + '/RefreshPrice', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => refreshLotInformation(data))
+            .function(error => console.error('Unable to fetch messages', error));
+    }
+
+    function refreshLotInformation(lotInfo) {
+        var endBillingDate = document.getElementById('endBillingDate');
+        var currentPrice = document.getElementById('currentPrice');
+
+        currentPrice.textContent = lotInfo.currentPrice;
+        var dateTime = new Date(lotInfo.endBillingDate);
+        endBillingDate.textContent = dateTime.toISOString().substr(0, 19).replace('T', ' ').replaceAll('-', '/');
+
+        var betInput = document.getElementById('bidSum');
+        var minBet = lotInfo.currentPrice + @Model.AuctionLot.BidStep;
+        betInput.minValue = minBet;
+        betInput.value = minBet;
     }
 
     function refreshMessages() {
@@ -114,6 +147,10 @@
             var messageElem = document.createElement('div');
             messageElem.className = 'chat-log__item';
 
+            if (message.isAdmin === true) {
+                messageElem.className += ' chat-log__item--admin';
+            }
+
             if (message.userLogin == login) {
                 messageElem.className += ' chat-log__item--own';
             }
@@ -123,7 +160,7 @@
             messageHeader.textContent = message.userLogin;
 
             var messageTime = document.createElement('small');
-            messageTime.textContent = message.dateTime;
+            messageTime.textContent = '  ' + new Date(message.dateTime).toISOString().substr(0, 19).replace('T', ' ').replaceAll('-', '/');
             messageHeader.appendChild(messageTime);
 
             var messageTextElem = document.createElement('div');

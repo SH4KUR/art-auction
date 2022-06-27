@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArtAuction.Core.Application.Commands;
@@ -87,6 +88,19 @@ namespace ArtAuction.WebUI.Controllers
             var messages = await _mediator.Send(new GetAuctionMessagesCommand { AuctionNumber = auctionNumber });
             return Json(messages.OrderByDescending(m => m.DateTime));
         }
+
+        [HttpGet("{auctionNumber}/RefreshPrice")]
+        public async Task<JsonResult> RefreshPrice(int auctionNumber)
+        {
+            var lot = await _mediator.Send(new GetAuctionLotCommand(auctionNumber));
+            
+            return Json(new RefreshPriceModel
+            {
+                AuctionNumber = auctionNumber,
+                CurrentPrice = lot.AuctionLot.CurrentPrice,
+                EndBillingDate = lot.AuctionLot.EndBillingDateTime
+            });
+        }
     }
 
     public class MessageModel
@@ -99,5 +113,12 @@ namespace ArtAuction.WebUI.Controllers
     {
         public int AuctionNumber { get; set; }
         public decimal BidSum { get; set; }
+    }
+
+    public class RefreshPriceModel
+    {
+        public int AuctionNumber { get; set; }
+        public decimal CurrentPrice { get; set; }
+        public DateTime EndBillingDate { get; set; }
     }
 }
