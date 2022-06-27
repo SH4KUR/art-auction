@@ -20,16 +20,30 @@
                  alt="@Model.AuctionLot.LotName Photo" style="max-height: 500px;" />
         </div>
         <div class="col">
-            
-            <a class="text-center text-muted mb-4" style="font-size: 1.2rem;" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@Model.AuctionLot.SellerLogin">
-                @if (Model.AuctionLot.IsVip)
+            <div class="row">
+                <a class="text-center text-muted mb-4" style="font-size: 1.2rem;" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@Model.AuctionLot.SellerLogin">
+                    Seller:
+                    
+                    @if (Model.AuctionLot.IsVip)
+                    {
+                        <i class="fa-solid fa-crown mr-2"></i>
+                    }
+
+                    <i class="fa-solid fa-user-tie mr-2"></i>@Model.AuctionLot.SellerLogin
+                </a>
+            </div>
+            <div class="row">
+                @if (Model.AuctionLot.IsClosed)
                 {
-                    <i class="fa-solid fa-crown mr-2"></i>
+                    @if (!string.IsNullOrEmpty(Model.AuctionLot.CustomerLogin))
+                    {
+                        <a class="text-center text-muted mb-4" style="font-size: 1.2rem;" asp-action="GetUserProfile" asp-controller="Profile" asp-route-userLogin="@Model.AuctionLot.CustomerLogin">
+                            Winner: <i class="fa-solid fa-user-tie mr-2"></i>@Model.AuctionLot.CustomerLogin
+                        </a>
+                    }
                 }
-
-                <i class="fa-solid fa-user-tie mr-2"></i>@Model.AuctionLot.SellerLogin
-            </a>
-
+            </div>
+            
             <h6 class="mt-4 mb-3">Painting Date: @Model.AuctionLot.PaintingDate</h6>
 
             <h5>Start Billing Date: @Model.AuctionLot.StartBillingDateTime.ToString("yyyy/MM/dd HH:mm:ss")</h5>
@@ -38,23 +52,26 @@
             <h6 class="mt-4">Start Price: @Model.AuctionLot.StartPrice.ToString("##.##") $</h6>
             <h6>Current Price: <span id="currentPrice">@Model.AuctionLot.CurrentPrice.ToString("##.##")</span> $</h6>
 
-            @if (Model.AuctionLot.FullPrice != null)
+            @if (!Model.AuctionLot.IsClosed)
             {
-                <h6>Full Price: @Model.AuctionLot.FullPrice.Value.ToString("##.##") $</h6>
-            }
-
-            @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Customer.ToString()))
-            {
-                <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
-                    <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
-                    <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
-                </form>
-
                 @if (Model.AuctionLot.FullPrice != null)
                 {
-                    <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
-                        <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                    <h6>Full Price: @Model.AuctionLot.FullPrice.Value.ToString("##.##") $</h6>
+                }
+
+                @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Customer.ToString()))
+                {
+                    <form action="javascript:void(0);" method="POST" onsubmit="placeBet()">
+                        <input id="bidSum" name="bidSum" type="number" min="@minimalBet" step="@Model.AuctionLot.BidStep" value="@minimalBet">
+                        <input type="submit" class="btn btn-lg btn-secondary" value="Place a Bet">
                     </form>
+
+                    @if (Model.AuctionLot.FullPrice != null)
+                    {
+                        <form action="javascript:void(0);" method="POST" onsubmit="buyFullPrice()">
+                            <input type="submit" class="btn btn-lg btn-success mt-3" value="Buy Full Price: @Model.AuctionLot.FullPrice.Value">
+                        </form>
+                    }
                 }
             }
 
@@ -86,6 +103,10 @@
 
     connection.on('RefreshCurrentPrice', function () {
         refreshCurrentPrice();
+    });
+
+    connection.on('RefreshPage', function () {
+        location.reload();
     });
 
     connection

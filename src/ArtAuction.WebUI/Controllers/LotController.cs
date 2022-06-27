@@ -80,7 +80,7 @@ namespace ArtAuction.WebUI.Controllers
                 AuctionNumber = auctionNumber
             });
 
-            await _hubContext.Clients.Group(auctionNumber.ToString()).SendAsync("RefreshCurrentPrice");
+            await _hubContext.Clients.Group(auctionNumber.ToString()).SendAsync("RefreshPage");
         }
 
         [HttpGet("{auctionNumber}/GetMessages")]

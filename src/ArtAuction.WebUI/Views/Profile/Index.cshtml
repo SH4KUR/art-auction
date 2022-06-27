@@ -7,17 +7,16 @@
 
 <div class="text-center">
     <h1 class="display-4">Profile @Model.User.Login</h1>
-    <h4>Balance: @ViewData["AccountBalance"] $</h4>
+    <h4>Balance: @(((decimal)ViewData["AccountBalance"]).ToString("#0.00")) $</h4>
 
-    <form asp-controller="Payment" asp-action="ReplenishPersonalAccount">
+    <form class="form-inline justify-content-center mt-3 mb-3" asp-controller="Payment" asp-action="ReplenishPersonalAccount">
         <div class="form-group">
-            <input id="replenishmentAmount" name="replenishmentAmount" class="form-control" />
+            <input id="replenishmentAmount" name="replenishmentAmount" class="form-control" value="1000" />
         </div>
-        <div class="form-group">
-            <input type="submit" value="Replenish" class="btn btn-lg btn-primary btn-block" />
+        <div class="form-group ml-2">
+            <input type="submit" value="Replenish" class="btn btn-lg btn-info" />
         </div>
     </form>
-
 
     @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Seller.ToString()))
     {
@@ -29,7 +28,7 @@
         </a>
     }
     
-    <h2>Operations</h2>
+    <h2 class="mt4">Operations</h2>
 
     <table class="mt-2 mb-3"
            data-toggle="table"

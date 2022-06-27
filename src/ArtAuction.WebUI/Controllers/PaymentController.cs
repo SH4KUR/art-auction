@@ -85,7 +85,7 @@ namespace ArtAuction.WebUI.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:44302/Payment/BuyVipStatus",
+                SuccessUrl = "https://localhost:44302/Payment/BuyVipStatusByCard",
                 CancelUrl = "https://localhost:44302/Profile",
             };
             
@@ -99,6 +99,13 @@ namespace ArtAuction.WebUI.Controllers
         public async Task<IActionResult> BuyVipStatus()
         {
             await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value });
+            return RedirectToAction("BuyVipSuccessful");
+        }
+
+        [Route("[controller]/BuyVipStatusByCard")]
+        public async Task<IActionResult> BuyVipStatusByCard()
+        {
+            await _mediator.Send(new BuyVipCommand { UserLogin = User?.FindFirst(ClaimTypes.Name)?.Value, ByCard = true });
             return RedirectToAction("BuyVipSuccessful");
         }
 

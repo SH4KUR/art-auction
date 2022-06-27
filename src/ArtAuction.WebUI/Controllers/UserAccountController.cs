@@ -37,6 +37,11 @@ namespace ArtAuction.WebUI.Controllers
                 var loggedUser = await _mediator.Send(new LoginUserCommand(model.Login, model.Password));
                 if (loggedUser != null)
                 {
+                    if (loggedUser.IsBlocked)
+                    {
+                        return View("UserBlocked");
+                    }
+                    
                     var claims = new List<Claim>
                     {
                         new(ClaimTypes.Role, loggedUser.Role.ToString()),

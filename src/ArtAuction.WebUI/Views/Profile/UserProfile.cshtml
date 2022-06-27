@@ -7,7 +7,7 @@
 
 <div class="text-center">
     <h1 class="display-4">
-        Profile @Model.User.Login
+        @Model.User.Role.ToString() : Profile "@Model.User.Login"
 
         @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.Administrator.ToString()))
         {

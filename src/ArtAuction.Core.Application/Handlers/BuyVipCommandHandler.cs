@@ -38,18 +38,38 @@ namespace ArtAuction.Core.Application.Handlers
             {
                 return Unit.Value;  // TODO: throw custom exception
             }
+
+            Operation operation;
             
-            var operation = new Operation
+            if (request.ByCard)
             {
-                OperationId = Guid.NewGuid(),
-                AccountId = account.AccountId,
-                OperationType = OperationType.Withdraw,
-                DateTime = DateTime.Now,
-                Description = "Purchase of VIP status.",
-                SumBefore = account.Sum,
-                SumOperation = vipCost,
-                SumAfter = account.Sum - vipCost
-            };
+                operation = new Operation
+                {
+                    OperationId = Guid.NewGuid(),
+                    AccountId = account.AccountId,
+                    OperationType = OperationType.Withdraw,
+                    DateTime = DateTime.Now,
+                    Description = "Purchase of VIP status by Card.",
+                    SumBefore = account.Sum,
+                    SumOperation = 0,
+                    SumAfter = account.Sum
+                };
+            }
+            else
+            {
+                operation = new Operation
+                {
+                    OperationId = Guid.NewGuid(),
+                    AccountId = account.AccountId,
+                    OperationType = OperationType.Withdraw,
+                    DateTime = DateTime.Now,
+                    Description = "Purchase of VIP status.",
+                    SumBefore = account.Sum,
+                    SumOperation = vipCost,
+                    SumAfter = account.Sum - vipCost
+                };
+            }
+            
             await _accountRepository.AddOperation(operation);
             
             await _accountRepository.AddVip(new Vip
