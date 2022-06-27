@@ -23,7 +23,7 @@
                  style="height: 175px" alt="@auction.LotName Photo"/>
 
             <div class="card-body">
-                <h5 class="card-title text-center">@auction.LotName</h5>
+                <h5 class="card-title text-center">@auction.LotName @(auction.IsClosed ? "(closed)" : string.Empty)</h5>
                 <h6 class="card-subtitle mb-2 text-muted text-center">@auction.CategoryName</h6>
 
                 <ul class="list-group list-group-flush">
